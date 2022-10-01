@@ -110,9 +110,9 @@ class _LoginSignupState extends State<LoginSignup> {
                             if (!connecter)
                               Container(
                                 margin: EdgeInsets.only(top: 3),
-                                height: 2,
+                                height: 3,
                                 width: 100,
-                                color: Colors.orange,
+                                color: Colors.green,
                               )
                           ],
                         ),
@@ -138,9 +138,9 @@ class _LoginSignupState extends State<LoginSignup> {
                               if (connecter)
                                 Container(
                                   margin: EdgeInsets.only(top: 3),
-                                  height: 2,
+                                  height: 3,
                                   width: 100,
-                                  color: Colors.orange,
+                                  color: Colors.green,
                                 ),
                             ],
                           ),
@@ -159,10 +159,11 @@ class _LoginSignupState extends State<LoginSignup> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => const Dashboard(
-                                    Route: "mainDashboard",
+                                    RouteLink: "mainDashboard",
                                   )));
                     },
-                    child: Text("S'incrire"),
+                    child:
+                        !connecter ? Text("Se connecter") : Text("S'incrire"),
                     style: TextButton.styleFrom(
                         side: BorderSide(width: 1, color: Colors.grey),
                         minimumSize: Size(145, 40),

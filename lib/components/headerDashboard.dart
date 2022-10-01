@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_survey/admin/dashbord.dart';
+import 'package:go_survey/components/DrawerMenu/oldEnquete.dart';
 import 'package:go_survey/components/bodyDashboard.dart';
 import 'package:go_survey/components/enquetes_recentes.dart';
 import 'package:go_survey/components/newsurvey.dart';
 import 'package:go_survey/components/rubriques.dart';
 import 'package:go_survey/components/titre_btn_plus.dart';
+import 'package:rating_dialog/rating_dialog.dart';
 
 class HeaderDashboard extends StatelessWidget {
   const HeaderDashboard({
@@ -121,7 +123,7 @@ class MenuGauche extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) => const Dashboard(
-                            Route: "mainDashboard",
+                            RouteLink: "mainDashboard",
                           )));
             },
           ),
@@ -140,7 +142,7 @@ class MenuGauche extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const Dashboard(
-                                        Route: "newEnquete",
+                                        RouteLink: "newEnquete",
                                       )))
                         },
                       );
@@ -149,12 +151,27 @@ class MenuGauche extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.home),
             title: Text("Enquetes recentes"),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Dashboard(
+                            RouteLink: "oldEnquete",
+                          )));
+            },
           ),
           ListTile(
             leading: Icon(Icons.favorite),
             title: Text("Parametre de l'application"),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Dashboard(
+                            RouteLink: "parametreDashboard",
+                            titre: "Parametre",
+                          )));
+            },
           ),
           Padding(
             padding: EdgeInsets.all(14.0),
@@ -166,10 +183,21 @@ class MenuGauche extends StatelessWidget {
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text("Licences et librairies"),
-            onTap: () {},
-          ),
+              leading: Icon(Icons.home),
+              title: Text("Licences et librairies"),
+              onTap: () {
+                showAboutDialog(
+                  context: context,
+                  applicationIcon: Image.asset(
+                    'assets/img/ico.png',
+                    height: 30,
+                  ),
+                  applicationName: 'Go Survey',
+                  applicationVersion: '\nV0.0.1',
+                  applicationLegalese: '2022 Power by Joviale',
+                  children: <Widget>[Text('')],
+                );
+              }),
           ListTile(
             leading: Icon(Icons.bluetooth),
             title: Text("Partager Go Survey"),
@@ -197,7 +225,11 @@ class _DashboardBodyState extends State<DashboardBody> {
       child: Column(
         children: [
           HeaderDashboard(size: size),
-          widget.RouteLink == "mainDashboard" ? MainDashboard() : NewEnquete(),
+          widget.RouteLink == "mainDashboard"
+              ? MainDashboard()
+              : widget.RouteLink == "oldEnquete"
+                  ? OldEnquete()
+                  : NewEnquete(),
         ],
       ),
     );

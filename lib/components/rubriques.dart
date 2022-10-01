@@ -218,8 +218,7 @@ class AlertGoSUrvey extends StatelessWidget {
                 SizedBox(
                   width: 300,
                   height: 50,
-                  child: RaisedButton(
-                    color: Color.fromARGB(99, 0, 128, 0),
+                  child: TextButton(
                     child: Text(titre, style: TextStyle(color: Colors.white)),
                     onPressed: () {},
                   ),
@@ -232,6 +231,7 @@ class AlertGoSUrvey extends StatelessWidget {
                   child: Column(
                     children: [
                       TextField(
+                        autofocus: true,
                         onTap: () {},
                         decoration: InputDecoration(hintText: hintText),
                       )

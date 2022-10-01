@@ -163,10 +163,8 @@ class _ButtonContinueState extends State<ButtonContinue> {
       child: SizedBox(
         width: screenProportionGetWidht(200),
         height: screenProportionGetHeight(40),
-        child: FlatButton(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            color: Colors.green,
+        child: TextButton(
+
             // onPressed: widget.appuyez,
             onPressed: () {},
             child: Text(

@@ -14,10 +14,7 @@ class TitreButtonPlus extends StatelessWidget {
           TextSouligne(
             text: titre,
           ),
-          FlatButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              color: Colors.green,
+          TextButton(
               onPressed: () {},
               child: Text(
                 titreBtn,

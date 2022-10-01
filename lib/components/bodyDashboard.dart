@@ -62,11 +62,6 @@ class _MainDashboardState extends State<MainDashboard> {
               sousTitre: "Enfant de la rue",
               RubriqueImg: null,
             ),
-            EnqueteRecente(
-              titre: "Enquete sur la malnutirtion",
-              sousTitre: "Enfant de la rue",
-              RubriqueImg: null,
-            ),
           ],
         ),
       ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_survey/auth/login.dart';
-import 'package:go_survey/components/home_screen.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';

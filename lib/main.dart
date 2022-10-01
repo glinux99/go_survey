@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_survey/auth/login.dart';
-import 'package:go_survey/components/home_screen.dart';
 import 'package:go_survey/components/introduction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,12 +29,13 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
         // This makes the visual density adapt to the platform that you run
         // the app on. For desktop platforms, the controls will be smaller and
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      // theme: ThemeData.light(),
       home: show ? AcceuilScreen() : const LoginSignup(),
     );
   }

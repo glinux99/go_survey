@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_survey/components/titre_btn_plus.dart';
 import 'package:checkbox_grouped/checkbox_grouped.dart';
+import 'package:go_survey/models/dynamique_quest.dart';
+import 'package:go_survey/providers/list_provider.dart';
+import 'package:provider/provider.dart';
 
 class QuestionnaireCreate extends StatefulWidget {
   const QuestionnaireCreate({super.key, required this.title});
@@ -14,7 +17,11 @@ class _QuestionnaireCreateState extends State<QuestionnaireCreate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text(widget.title)), body: QuestionCreate());
+        appBar: AppBar(title: Text(widget.title)),
+        body: ChangeNotifierProvider<ListProvider>(
+          create: (context) => ListProvider(),
+          child: QuestionCreate(),
+        ));
   }
 }
 
@@ -27,7 +34,28 @@ class QuestionCreate extends StatefulWidget {
 
 class _QuestionCreateState extends State<QuestionCreate> {
   bool valueCheckbox = false;
+  late GlobalKey<FormState> _globalKey;
+  late TextEditingController _controller;
+  int compteur = 0;
+  late DynamicList listClass;
+  var taskItems;
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _globalKey = GlobalKey();
+    taskItems = Provider.of<ListProvider>(context, listen: false);
+    listClass = DynamicList(taskItems.list);
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _controller.dispose();
+  }
+
   Widget checkBoxWidget(
           {required TypeOfReponse typeOfReponse,
           required VoidCallback OnClicked}) =>
@@ -72,6 +100,32 @@ class _QuestionCreateState extends State<QuestionCreate> {
         SizedBox(
           height: 20,
         ),
+        Container(
+          child: Form(
+              key: _globalKey,
+              child: TextFormField(
+                controller: _controller,
+                onSaved: (val) {
+                  taskItems.AjouterElement(val);
+                },
+              )),
+        ),
+        Padding(
+          padding: EdgeInsets.all(8),
+          child: ElevatedButton(
+            onPressed: () {
+              if (_globalKey.currentState!.validate()) {
+                _globalKey.currentState!.save();
+              }
+            },
+            child: Text("Ajouter"),
+          ),
+        ),
+        Consumer<ListProvider>(builder: (context, provider, listTile) {
+          return Expanded(
+              child: ListView.builder(
+                  itemCount: listClass.list.length, itemBuilder: buildList));
+        })
       ],
     );
   }
@@ -188,6 +242,93 @@ class _QuestionCreateState extends State<QuestionCreate> {
         ],
       ),
     ));
+  }
+
+  Widget buildList(
+    BuildContext context,
+    int index,
+  ) {
+    compteur++;
+    return Dismissible(
+      key: Key(compteur.toString()),
+      direction: DismissDirection.startToEnd,
+      onDismissed: (direction) {
+        taskItems.SuppElement(index);
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 10, top: 15),
+        padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+        child: Container(
+          decoration: BoxDecoration(
+              color: Colors.green[200],
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  topRight: Radius.circular(30)),
+              boxShadow: [
+                new BoxShadow(
+                    color: Colors.green.withOpacity(.3),
+                    offset: new Offset(-10, 5),
+                    blurRadius: 20,
+                    spreadRadius: 4)
+              ]),
+          child: Column(
+            children: [
+              Text(
+                "Creer une question",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(
+                          hintText: "Veuillez taper une question ici"),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, top: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Type de reponse",
+                    ),
+                    Column(
+                      children: [
+                        SimpleGroupedCheckbox<int>(
+                          controller: GroupController(),
+                          itemsTitle: [
+                            "Reponse Textuelle",
+                            "Reponse Numerique",
+                            "Modalites [ 1. Oui, 2. Non]",
+                            "Autres modalites"
+                          ],
+                          values: [1, 2, 4, 5],
+                          groupStyle: GroupStyle(
+                              activeColor: Colors.green,
+                              itemTitleStyle: TextStyle(fontSize: 13)),
+                          checkFirstElement: true,
+                        )
+                        // ...typeofresponse.map(SimpleCheckbox).toList(),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

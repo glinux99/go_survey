@@ -3,6 +3,7 @@ import 'package:go_survey/components/titre_btn_plus.dart';
 import 'package:checkbox_grouped/checkbox_grouped.dart';
 import 'package:go_survey/models/dynamique_quest.dart';
 import 'package:go_survey/providers/list_provider.dart';
+import 'package:group_radio_button/group_radio_button.dart';
 import 'package:provider/provider.dart';
 
 class QuestionnaireCreate extends StatefulWidget {
@@ -36,6 +37,13 @@ class _QuestionCreateState extends State<QuestionCreate> {
   bool valueCheckbox = false;
   late GlobalKey<FormState> _globalKey;
   late TextEditingController _controller;
+  GroupController controllerCheckbox = GroupController();
+  String _singleValue = "Text alignment right";
+  List<String> typeReponse = [
+    'Reponse textuelle',
+    'Reponse Numerique',
+    'Reponse Numerique'
+  ];
   int compteur = 0;
   late DynamicList listClass;
   var taskItems;
@@ -96,10 +104,6 @@ class _QuestionCreateState extends State<QuestionCreate> {
                 AideCreateQuestionnaire(titre: "odk")
               ],
             )),
-        createSection(context, typeofreponse),
-        SizedBox(
-          height: 20,
-        ),
         Container(
           child: Form(
               key: _globalKey,
@@ -182,20 +186,6 @@ class _QuestionCreateState extends State<QuestionCreate> {
                         ),
                         Column(
                           children: [
-                            SimpleGroupedCheckbox<int>(
-                              controller: GroupController(),
-                              itemsTitle: [
-                                "Reponse Textuelle",
-                                "Reponse Numerique",
-                                "Modalites [ 1. Oui, 2. Non]",
-                                "Autres modalites"
-                              ],
-                              values: [1, 2, 4, 5],
-                              groupStyle: GroupStyle(
-                                  activeColor: Colors.green,
-                                  itemTitleStyle: TextStyle(fontSize: 13)),
-                              checkFirstElement: true,
-                            )
                             // ...typeofresponse.map(SimpleCheckbox).toList(),
                           ],
                         )
@@ -249,6 +239,7 @@ class _QuestionCreateState extends State<QuestionCreate> {
     int index,
   ) {
     compteur++;
+    Object? value;
     return Dismissible(
       key: Key(compteur.toString()),
       direction: DismissDirection.startToEnd,
@@ -296,25 +287,49 @@ class _QuestionCreateState extends State<QuestionCreate> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Type de reponse",
-                    ),
                     Column(
                       children: [
-                        SimpleGroupedCheckbox<int>(
-                          controller: GroupController(),
-                          itemsTitle: [
-                            "Reponse Textuelle",
-                            "Reponse Numerique",
-                            "Modalites [ 1. Oui, 2. Non]",
-                            "Autres modalites"
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            RadioButton(
+                              description: "Text alignment right",
+                              value: "Text alignment right",
+                              groupValue: _singleValue,
+                              onChanged: (value) => setState(
+                                () => _singleValue = value.toString(),
+                              ),
+                              activeColor: Colors.red,
+                            ),
+                            RadioButton(
+                              description: "Text alignment left",
+                              value: "Text alignment left",
+                              groupValue: _singleValue,
+                              onChanged: (value) => setState(
+                                () => _singleValue = value.toString(),
+                              ),
+                            ),
+                            RadioButton(
+                              description: "Text alignment left",
+                              value: "Text alignment left",
+                              groupValue: _singleValue,
+                              onChanged: (value) => setState(
+                                () => _singleValue = value.toString(),
+                              ),
+                            ),
+                            RadioGroup<String>.builder(
+                              groupValue: _singleValue,
+                              onChanged: (value) => setState(() {
+                                _singleValue = value.toString();
+                              }),
+                              items: typeReponse,
+                              itemBuilder: (item) => RadioButtonBuilder(
+                                item,
+                                textPosition: RadioButtonTextPosition.left,
+                              ),
+                            ),
                           ],
-                          values: [1, 2, 4, 5],
-                          groupStyle: GroupStyle(
-                              activeColor: Colors.green,
-                              itemTitleStyle: TextStyle(fontSize: 13)),
-                          checkFirstElement: true,
-                        )
+                        ),
                         // ...typeofresponse.map(SimpleCheckbox).toList(),
                       ],
                     )

@@ -17,23 +17,23 @@ class _MainDashboardState extends State<MainDashboard> {
       children: [
         TitreButtonPlus(
           titreBtn: "Voir plus",
-          titre: "Nos rubriques",
+          titre: "Nos recentes enquetes",
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              RubriquesWidget(
+              EnqueteWidget(
                 img: "assets/img/2.png",
                 titre: "Enfant de la rue",
                 CountQ: 12,
               ),
-              RubriquesWidget(
+              EnqueteWidget(
                 img: "assets/img/1.jpg",
                 titre: "Enfant de la rue",
                 CountQ: 12,
               ),
-              RubriquesWidget(
+              EnqueteWidget(
                 img: "assets/img/1.jpg",
                 titre: "Enfant de la rue",
                 CountQ: 12,
@@ -43,10 +43,15 @@ class _MainDashboardState extends State<MainDashboard> {
         ),
         TitreButtonPlus(
           titreBtn: "Voir plus",
-          titre: "Nos enquetes recentes",
+          titre: "Nos questionnaires recentes",
         ),
         Column(
           children: [
+            EnqueteRecente(
+              titre: "Enque sur les enfants de",
+              sousTitre: "Enfant de la rue",
+              RubriqueImg: null,
+            ),
             EnqueteRecente(
               titre: "Enque sur les enfants de",
               sousTitre: "Enfant de la rue",

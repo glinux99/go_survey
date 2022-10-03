@@ -15,12 +15,12 @@ class NewEnquete extends StatelessWidget {
         Wrap(
           children: [
             RubriqueCreateWidget(),
-            RubriquesWidget(
+            EnqueteWidget(
               img: "assets/img/2.png",
               titre: "Enfant de la rue",
               CountQ: 12,
             ),
-            RubriquesWidget(
+            EnqueteWidget(
               img: "assets/img/2.png",
               titre: "Enfant de la rue",
               CountQ: 12,

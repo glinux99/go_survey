@@ -6,6 +6,7 @@ import 'package:go_survey/components/enquetes_recentes.dart';
 import 'package:go_survey/components/newsurvey.dart';
 import 'package:go_survey/components/rubriques.dart';
 import 'package:go_survey/components/titre_btn_plus.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 
 class HeaderDashboard extends StatelessWidget {
@@ -180,7 +181,51 @@ class MenuGauche extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.favorite),
             title: Text("Laissez un avis sur PlayStore"),
-            onTap: () {},
+            onTap: () {
+              // show the dialog
+              showDialog(
+                  context: context,
+                  barrierDismissible:
+                      true, // set to false if you want to force a rating
+                  builder: (context) => RatingDialog(
+                        initialRating: 1.0,
+                        // your app's name?
+                        title: Text(
+                          'Evaluation',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        message: Text(
+                          'Appuyez sur une étoile pour définir votre évaluation. Ajoutez plus de description ici si vous le souhaitez.',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                        // logo de l application
+                        image: Image.asset(
+                          "assets/img/ico.png",
+                          height: 100,
+                        ),
+                        submitButtonText: 'Envoyer',
+                        commentHint: 'Inserer ici votre commmentaire',
+                        onCancelled: () => print('annuler'),
+                        onSubmitted: (response) {
+                          print(
+                              'rating: ${response.rating}, comment: ${response.comment}');
+
+                          // TODO: add your own logic
+                          if (response.rating < 3.0) {
+                            // send their comments to your email or anywhere you wish
+                            // ask the user to contact you instead of leaving a bad review
+                          } else {
+                            _rateAndReviewApp();
+                          }
+                        },
+                      ));
+            },
           ),
           ListTile(
               leading: Icon(Icons.home),
@@ -206,6 +251,24 @@ class MenuGauche extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  // actual store listing review & rating
+  void _rateAndReviewApp() async {
+    // refer to: https://pub.dev/packages/in_app_review
+    final _inAppReview = InAppReview.instance;
+
+    if (await _inAppReview.isAvailable()) {
+      print('request actual review from store');
+      _inAppReview.requestReview();
+    } else {
+      print('open actual store listing');
+      // TODO: use your own store ids
+      _inAppReview.openStoreListing(
+        appStoreId: '<your app store id>',
+        microsoftStoreId: '<your microsoft store id>',
+      );
+    }
   }
 }
 

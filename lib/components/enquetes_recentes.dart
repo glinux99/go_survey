@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class EnqueteRecente extends StatefulWidget {
-  const EnqueteRecente(
-      {super.key,
-      required this.titre,
-      required this.sousTitre,
-      required this.RubriqueImg});
+  const EnqueteRecente({
+    super.key,
+    required this.titre,
+    required this.sousTitre,
+    required this.RubriqueImg,
+  });
   final titre, sousTitre, RubriqueImg;
+  // final CountQ = 0;
   @override
   State<EnqueteRecente> createState() => _EnqueteRecenteState();
 }
@@ -24,6 +26,7 @@ class _EnqueteRecenteState extends State<EnqueteRecente> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
@@ -57,9 +60,10 @@ class _EnqueteRecenteState extends State<EnqueteRecente> {
                       )
                     ],
                   ),
+                  Text('\n\n12'),
                 ],
               ),
-              Icon(Icons.more_horiz),
+              Icon(Icons.more_vert),
             ],
           )),
     );

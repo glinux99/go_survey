@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_survey/components/DrawerMenu/newEnquete/questionnaires_creates.dart';
 
-class RubriquesWidget extends StatefulWidget {
-  const RubriquesWidget({
+class EnqueteWidget extends StatefulWidget {
+  const EnqueteWidget({
     super.key,
     required this.img,
     required this.CountQ,
@@ -10,10 +11,10 @@ class RubriquesWidget extends StatefulWidget {
   final String img, titre;
   final int CountQ;
   @override
-  State<RubriquesWidget> createState() => _RubriquesWidgetState();
+  State<EnqueteWidget> createState() => _EnqueteWidgetState();
 }
 
-class _RubriquesWidgetState extends State<RubriquesWidget> {
+class _EnqueteWidgetState extends State<EnqueteWidget> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -118,7 +119,14 @@ class RubriqueCreateWidget extends StatelessWidget {
                 return AlertGoSUrvey(
                   titre: "Creer une ribrique",
                   hintText: "Entrer le nom de votre rubrique",
-                  validation: () {},
+                  validation: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => QuestionnaireCreate(
+                                  title: "Creation du questionnaire",
+                                )));
+                  },
                 );
               });
         },

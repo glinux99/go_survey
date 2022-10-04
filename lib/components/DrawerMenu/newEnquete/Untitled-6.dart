@@ -3,7 +3,6 @@ import 'package:go_survey/components/titre_btn_plus.dart';
 import 'package:checkbox_grouped/checkbox_grouped.dart';
 import 'package:go_survey/models/dynamique_quest.dart';
 import 'package:go_survey/providers/list_provider.dart';
-import 'package:group_radio_button/group_radio_button.dart';
 import 'package:provider/provider.dart';
 
 class QuestionnaireCreate extends StatefulWidget {
@@ -37,17 +36,6 @@ class _QuestionCreateState extends State<QuestionCreate> {
   bool valueCheckbox = false;
   late GlobalKey<FormState> _globalKey;
   late TextEditingController _controller;
-  GroupController controllerCheckbox = GroupController();
-  String _singleValue = "Reponse textuelle";
-  String _singleValue2 = "Reponse textuelle";
-  List<String> typeReponse = [
-    'Reponse textuelle',
-    'Reponse Numerique',
-    'Reponse Numerique 2'
-  ];
-  Map<String, String> valueKey = {"_singleValue": "Reponse textuelle"};
-  Map<int, String> valeurSelected = new Map<int, String>();
-  late String _verticalGroupValue = "Reponse textuelle";
   int compteur = 0;
   late DynamicList listClass;
   var taskItems;
@@ -55,16 +43,10 @@ class _QuestionCreateState extends State<QuestionCreate> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timestamp) {
-      for (int i = 0; i < 3; i++) {
-        valeurSelected.putIfAbsent(i, () => ""); //valeur par defaut
-      }
-    });
     _globalKey = GlobalKey();
     taskItems = Provider.of<ListProvider>(context, listen: false);
     listClass = DynamicList(taskItems.list);
     _controller = TextEditingController();
-    setState(() {});
   }
 
   @override
@@ -98,80 +80,54 @@ class _QuestionCreateState extends State<QuestionCreate> {
           setState(() {
             final newvalue = !typeofreponse.value;
             typeofreponse.value = newvalue;
-            print(typeofreponse.value);
           });
         },
       );
   Widget build(BuildContext context) {
-    return Stack(children: [
-      Column(
-        children: [
-          SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  AideCreateQuestionnaire(
-                      titre:
-                          "Merci d'avoir choisis GoSurvey pour faire vos enquete"),
-                  AideCreateQuestionnaire(titre: "odk")
-                ],
+    return Column(
+      children: [
+        SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                AideCreateQuestionnaire(
+                    titre:
+                        "Merci d'avoir choisis GoSurvey pour faire vos enquete"),
+                AideCreateQuestionnaire(titre: "odk")
+              ],
+            )),
+        createSection(context, typeofreponse),
+        SizedBox(
+          height: 20,
+        ),
+        Container(
+          child: Form(
+              key: _globalKey,
+              child: TextFormField(
+                controller: _controller,
+                onSaved: (val) {
+                  taskItems.AjouterElement(val);
+                },
               )),
-          createSection(context, typeofreponse),
-          Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(4))),
-            child: Container(
-              width: 30,
-              decoration: BoxDecoration(
-                  color: Colors.red, borderRadius: BorderRadius.circular(7.5)),
-              child: IconButton(onPressed: () {}, icon: Icon(Icons.add)),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8),
-            child: ElevatedButton(
-              onPressed: () {
-                if (_globalKey.currentState!.validate()) {
-                  _globalKey.currentState!.save();
-                }
-                print(listClass.list[1]);
-              },
-              child: Text("Ajouter"),
-            ),
-          ),
-          Consumer<ListProvider>(builder: (context, provider, listTile) {
-            return Expanded(
-                child: ListView.builder(
-                    itemCount: listClass.list.length, itemBuilder: buildList));
-          })
-        ],
-      ),
-      Positioned(
-        top: 180,
-        right: 0,
-        width: 100,
-        height: 100,
-        child: Padding(
-          padding: const EdgeInsets.only(right: 20),
-          child: Container(
-            height: 54,
-            decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                )),
-            child: Column(
-              children: [Icon(Icons.add_circle)],
-            ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(8),
+          child: ElevatedButton(
+            onPressed: () {
+              if (_globalKey.currentState!.validate()) {
+                _globalKey.currentState!.save();
+              }
+            },
+            child: Text("Ajouter"),
           ),
         ),
-      ),
-    ]);
+        Consumer<ListProvider>(builder: (context, provider, listTile) {
+          return Expanded(
+              child: ListView.builder(
+                  itemCount: listClass.list.length, itemBuilder: buildList));
+        })
+      ],
+    );
   }
 
   Expanded createSection(context, typeofresponse) {
@@ -209,17 +165,10 @@ class _QuestionCreateState extends State<QuestionCreate> {
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: [
-                        Form(
-                            key: _globalKey,
-                            child: TextFormField(
-                              autofocus: false,
-                              decoration: InputDecoration(
-                                  hintText: "Tapez ici votre questionnaire"),
-                              controller: _controller,
-                              onSaved: (val) {
-                                taskItems.AjouterElement(val);
-                              },
-                            )),
+                        TextField(
+                          decoration: InputDecoration(
+                              hintText: "Veuillez taper une question ici"),
+                        ),
                       ],
                     ),
                   ),
@@ -233,23 +182,26 @@ class _QuestionCreateState extends State<QuestionCreate> {
                         ),
                         Column(
                           children: [
-                            RadioGroup<String>.builder(
-                              groupValue: _verticalGroupValue,
-                              onChanged: (value) => setState(() {
-                                _verticalGroupValue = value.toString();
-                              }),
-                              items: typeReponse,
-                              itemBuilder: (item) => RadioButtonBuilder(
-                                item,
-                              ),
-                            ),
+                            SimpleGroupedCheckbox<int>(
+                              controller: GroupController(),
+                              itemsTitle: [
+                                "Reponse Textuelle",
+                                "Reponse Numerique",
+                                "Modalites [ 1. Oui, 2. Non]",
+                                "Autres modalites"
+                              ],
+                              values: [1, 2, 4, 5],
+                              groupStyle: GroupStyle(
+                                  activeColor: Colors.green,
+                                  itemTitleStyle: TextStyle(fontSize: 13)),
+                              checkFirstElement: true,
+                            )
                             // ...typeofresponse.map(SimpleCheckbox).toList(),
                           ],
                         )
                       ],
                     ),
                   ),
-                  Text(_verticalGroupValue),
                   SizedBox(
                     height: 20,
                   )
@@ -302,24 +254,13 @@ class _QuestionCreateState extends State<QuestionCreate> {
       direction: DismissDirection.startToEnd,
       onDismissed: (direction) {
         taskItems.SuppElement(index);
-        if (index > 0) listClass.list.removeAt(index - 1);
       },
       child: Container(
-        margin: EdgeInsets.only(bottom: 10, top: 15),
-        padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
-        child: Container(
           decoration: BoxDecoration(
-              color: Colors.green[200],
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  topRight: Radius.circular(30)),
-              boxShadow: [
-                new BoxShadow(
-                    color: Colors.green.withOpacity(.3),
-                    offset: new Offset(-10, 5),
-                    blurRadius: 20,
-                    spreadRadius: 4)
-              ]),
+              border: Border.all(
+            color: Colors.green,
+            width: 2,
+          )),
           child: Column(
             children: [
               Text(
@@ -335,7 +276,7 @@ class _QuestionCreateState extends State<QuestionCreate> {
                   children: [
                     TextField(
                       decoration: InputDecoration(
-                          hintText: listClass.list[index].toString()),
+                          hintText: "Veuillez taper une question ici"),
                     ),
                   ],
                 ),
@@ -345,18 +286,25 @@ class _QuestionCreateState extends State<QuestionCreate> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      "Type de reponse",
+                    ),
                     Column(
                       children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Column(
-                              children: [
-                                Text("Type de reponse"),
-                              ],
-                            )
+                        SimpleGroupedCheckbox<int>(
+                          controller: GroupController(),
+                          itemsTitle: [
+                            "Reponse Textuelle",
+                            "Reponse Numerique",
+                            "Modalites [ 1. Oui, 2. Non]",
+                            "Autres modalites"
                           ],
-                        ),
+                          values: [1, 2, 4, 5],
+                          groupStyle: GroupStyle(
+                              activeColor: Colors.green,
+                              itemTitleStyle: TextStyle(fontSize: 13)),
+                          checkFirstElement: true,
+                        )
                         // ...typeofresponse.map(SimpleCheckbox).toList(),
                       ],
                     )
@@ -367,9 +315,7 @@ class _QuestionCreateState extends State<QuestionCreate> {
                 height: 20,
               )
             ],
-          ),
-        ),
-      ),
+          )),
     );
   }
 }

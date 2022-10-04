@@ -47,7 +47,7 @@ class _QuestionCreateState extends State<QuestionCreate> {
   ];
   Map<String, String> valueKey = {"_singleValue": "Reponse textuelle"};
   Map<int, String> valeurSelected = new Map<int, String>();
-  late String _verticalGroupValue = "Reponse textuelle";
+
   int compteur = 0;
   late DynamicList listClass;
   var taskItems;
@@ -98,80 +98,50 @@ class _QuestionCreateState extends State<QuestionCreate> {
           setState(() {
             final newvalue = !typeofreponse.value;
             typeofreponse.value = newvalue;
-            print(typeofreponse.value);
           });
         },
       );
   Widget build(BuildContext context) {
-    return Stack(children: [
-      Column(
-        children: [
-          SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  AideCreateQuestionnaire(
-                      titre:
-                          "Merci d'avoir choisis GoSurvey pour faire vos enquete"),
-                  AideCreateQuestionnaire(titre: "odk")
-                ],
+    return Column(
+      children: [
+        SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                AideCreateQuestionnaire(
+                    titre:
+                        "Merci d'avoir choisis GoSurvey pour faire vos enquete"),
+                AideCreateQuestionnaire(titre: "odk")
+              ],
+            )),
+        Container(
+          child: Form(
+              key: _globalKey,
+              child: TextFormField(
+                controller: _controller,
+                onSaved: (val) {
+                  taskItems.AjouterElement(val);
+                },
               )),
-          createSection(context, typeofreponse),
-          Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(4))),
-            child: Container(
-              width: 30,
-              decoration: BoxDecoration(
-                  color: Colors.red, borderRadius: BorderRadius.circular(7.5)),
-              child: IconButton(onPressed: () {}, icon: Icon(Icons.add)),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8),
-            child: ElevatedButton(
-              onPressed: () {
-                if (_globalKey.currentState!.validate()) {
-                  _globalKey.currentState!.save();
-                }
-                print(listClass.list[1]);
-              },
-              child: Text("Ajouter"),
-            ),
-          ),
-          Consumer<ListProvider>(builder: (context, provider, listTile) {
-            return Expanded(
-                child: ListView.builder(
-                    itemCount: listClass.list.length, itemBuilder: buildList));
-          })
-        ],
-      ),
-      Positioned(
-        top: 180,
-        right: 0,
-        width: 100,
-        height: 100,
-        child: Padding(
-          padding: const EdgeInsets.only(right: 20),
-          child: Container(
-            height: 54,
-            decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                )),
-            child: Column(
-              children: [Icon(Icons.add_circle)],
-            ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(8),
+          child: ElevatedButton(
+            onPressed: () {
+              if (_globalKey.currentState!.validate()) {
+                _globalKey.currentState!.save();
+              }
+            },
+            child: Text("Ajouter"),
           ),
         ),
-      ),
-    ]);
+        Consumer<ListProvider>(builder: (context, provider, listTile) {
+          return Expanded(
+              child: ListView.builder(
+                  itemCount: listClass.list.length, itemBuilder: buildList));
+        })
+      ],
+    );
   }
 
   Expanded createSection(context, typeofresponse) {
@@ -209,17 +179,10 @@ class _QuestionCreateState extends State<QuestionCreate> {
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: [
-                        Form(
-                            key: _globalKey,
-                            child: TextFormField(
-                              autofocus: false,
-                              decoration: InputDecoration(
-                                  hintText: "Tapez ici votre questionnaire"),
-                              controller: _controller,
-                              onSaved: (val) {
-                                taskItems.AjouterElement(val);
-                              },
-                            )),
+                        TextField(
+                          decoration: InputDecoration(
+                              hintText: "Veuillez taper une question ici"),
+                        ),
                       ],
                     ),
                   ),
@@ -233,23 +196,12 @@ class _QuestionCreateState extends State<QuestionCreate> {
                         ),
                         Column(
                           children: [
-                            RadioGroup<String>.builder(
-                              groupValue: _verticalGroupValue,
-                              onChanged: (value) => setState(() {
-                                _verticalGroupValue = value.toString();
-                              }),
-                              items: typeReponse,
-                              itemBuilder: (item) => RadioButtonBuilder(
-                                item,
-                              ),
-                            ),
                             // ...typeofresponse.map(SimpleCheckbox).toList(),
                           ],
                         )
                       ],
                     ),
                   ),
-                  Text(_verticalGroupValue),
                   SizedBox(
                     height: 20,
                   )
@@ -296,13 +248,13 @@ class _QuestionCreateState extends State<QuestionCreate> {
     BuildContext context,
     int index,
   ) {
+    var entryList = valueKey.entries.toList();
     compteur++;
     return Dismissible(
       key: Key(compteur.toString()),
       direction: DismissDirection.startToEnd,
       onDismissed: (direction) {
         taskItems.SuppElement(index);
-        if (index > 0) listClass.list.removeAt(index - 1);
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 10, top: 15),
@@ -335,7 +287,7 @@ class _QuestionCreateState extends State<QuestionCreate> {
                   children: [
                     TextField(
                       decoration: InputDecoration(
-                          hintText: listClass.list[index].toString()),
+                          hintText: "Veuillez taper une question ici"),
                     ),
                   ],
                 ),
@@ -352,7 +304,7 @@ class _QuestionCreateState extends State<QuestionCreate> {
                           children: <Widget>[
                             Column(
                               children: [
-                                Text("Type de reponse"),
+                                Text("oooo"),
                               ],
                             )
                           ],
@@ -371,6 +323,35 @@ class _QuestionCreateState extends State<QuestionCreate> {
         ),
       ),
     );
+  }
+}
+
+class selectWidget extends StatelessWidget {
+  const selectWidget({
+    Key? key,
+    required this.valeurSelected,
+  }) : super(key: key);
+
+  final Map<int, String> valeurSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        itemCount: valeurSelected.length + 1,
+        itemBuilder: (context, index2) => index2 < valeurSelected.length
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Question $index2',
+                    style: TextStyle(fontSize: 24),
+                  )
+                ],
+              )
+            : ElevatedButton(
+                onPressed: () => print(valeurSelected),
+                child: Text("get selescted")));
   }
 }
 

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_survey/admin/dashbord.dart';
-import 'package:go_survey/components/DrawerMenu/oldEnquete.dart';
+import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/oldEnquete.dart';
 import 'package:go_survey/components/bodyDashboard.dart';
-import 'package:go_survey/components/enquetes_recentes.dart';
-import 'package:go_survey/components/newsurvey.dart';
-import 'package:go_survey/components/rubriques.dart';
-import 'package:go_survey/components/titre_btn_plus.dart';
+import 'package:go_survey/components/DrawerMenu/newEnquete/newsurvey.dart';
+import 'package:go_survey/components/DrawerMenu/configs/rubriques.dart';
+import 'package:go_survey/components/colors/colors.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 
@@ -89,11 +88,24 @@ class HeaderDashboard extends StatelessWidget {
 }
 
 // Menu drawer
-class MenuGauche extends StatelessWidget {
-  const MenuGauche({
-    Key? key,
-  }) : super(key: key);
+class MenuGauche extends StatefulWidget {
+  const MenuGauche({super.key});
 
+  @override
+  State<MenuGauche> createState() => _MenuGaucheState();
+}
+
+bool iconBinary = false;
+IconData _themeLightIcon = Icons.wb_sunny;
+IconData _themeDarkIcon = Icons.nights_stay;
+ThemeData _themeDark = ThemeData(
+  primarySwatch: Colors.red,
+  brightness: Brightness.dark,
+);
+ThemeData _themeLight =
+    ThemeData(primarySwatch: Colors.green, brightness: Brightness.light);
+
+class _MenuGaucheState extends State<MenuGauche> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -110,10 +122,18 @@ class MenuGauche extends StatelessWidget {
             currentAccountPicture:
                 CircleAvatar(foregroundImage: AssetImage("assets/img/1.jpg")),
             otherAccountsPictures: [
-              Icon(
-                Icons.light_mode,
-                color: Colors.white,
-              ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    iconBinary = !iconBinary;
+                    kprimary = Colors.green;
+                  });
+                },
+                icon: Icon(
+                  iconBinary ? _themeDarkIcon : _themeLightIcon,
+                  color: Colors.white,
+                ),
+              )
             ],
           ),
           ListTile(

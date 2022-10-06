@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_survey/components/titre_btn_plus.dart';
 import 'package:checkbox_grouped/checkbox_grouped.dart';
 import 'package:go_survey/models/dynamique_quest.dart';
 import 'package:go_survey/providers/list_provider.dart';
@@ -51,7 +50,7 @@ class _QuestionCreateState extends State<QuestionCreate> {
   late String _verticalGroupValue = "Reponse textuelle";
   int compteur = 0;
   late DynamicList listClass;
-  late DynamicList reponseTypeList;
+  late List<String> reponseTypeList;
   var taskItems;
   @override
   void initState() {
@@ -65,7 +64,7 @@ class _QuestionCreateState extends State<QuestionCreate> {
     _globalKey = GlobalKey();
     taskItems = Provider.of<ListProvider>(context, listen: false);
     listClass = DynamicList(taskItems.list);
-    reponseTypeList = DynamicList(taskItems.list);
+    reponseTypeList = [];
     _controller = TextEditingController();
     setState(() {});
   }
@@ -109,16 +108,16 @@ class _QuestionCreateState extends State<QuestionCreate> {
     return Stack(children: [
       Column(
         children: [
-          SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  AideCreateQuestionnaire(
-                      titre:
-                          "Merci d'avoir choisis GoSurvey pour faire vos enquete"),
-                  AideCreateQuestionnaire(titre: "odk")
-                ],
-              )),
+          // SingleChildScrollView(
+          //     scrollDirection: Axis.horizontal,
+          //     child: Row(
+          //       children: [
+          //         AideCreateQuestionnaire(
+          //             titre:
+          //                 "Merci d'avoir choisis GoSurvey pour faire vos enquete"),
+          //         AideCreateQuestionnaire(titre: "odk")
+          //       ],
+          //     )),
           createSection(context, typeofreponse),
           Consumer<ListProvider>(builder: (context, provider, listTile) {
             return Expanded(
@@ -128,7 +127,7 @@ class _QuestionCreateState extends State<QuestionCreate> {
         ],
       ),
       Positioned(
-        top: 200,
+        top: 10,
         right: 0,
         width: 75,
         child: Padding(
@@ -175,42 +174,41 @@ class _QuestionCreateState extends State<QuestionCreate> {
     ]);
   }
 
-  Expanded createSection(context, typeofresponse) {
-    return Expanded(
-        child: MediaQuery.removePadding(
-      context: context,
-      child: Wrap(children: [
-        Container(
-          margin: EdgeInsets.only(bottom: 10, top: 15),
-          padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.green[200],
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    topRight: Radius.circular(30)),
-                boxShadow: [
-                  new BoxShadow(
-                      color: Colors.green.withOpacity(.3),
-                      offset: new Offset(-10, 5),
-                      blurRadius: 20,
-                      spreadRadius: 4)
-                ]),
-            child: Column(
-              children: [
-                Text(
-                  "Creer une question",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      Form(
-                          key: _globalKey,
+  Wrap createSection(context, typeofresponse) {
+    return Wrap(children: [
+      Container(
+        margin: EdgeInsets.only(bottom: 10, top: 15),
+        padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+        child: Container(
+          decoration: BoxDecoration(
+              color: Colors.green[200],
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  topRight: Radius.circular(30)),
+              boxShadow: [
+                new BoxShadow(
+                    color: Colors.green.withOpacity(.3),
+                    offset: new Offset(-10, 5),
+                    blurRadius: 20,
+                    spreadRadius: 4)
+              ]),
+          child: Column(
+            children: [
+              Text(
+                "Creer une question",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    Form(
+                        key: _globalKey,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 40),
                           child: TextFormField(
                             autofocus: false,
                             decoration: InputDecoration(
@@ -218,44 +216,57 @@ class _QuestionCreateState extends State<QuestionCreate> {
                             controller: _controller,
                             onSaved: (val) {
                               taskItems.AjouterElement(val);
+                              setState(() {
+                                reponseTypeList.add(_verticalGroupValue);
+                                print(_verticalGroupValue);
+                                print(reponseTypeList);
+                              });
                             },
-                          )),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, top: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Type de reponse",
-                      ),
-                      Column(
-                        children: [
-                          RadioGroup<String>.builder(
-                            groupValue: _verticalGroupValue,
-                            onChanged: (value) => setState(() {
-                              _verticalGroupValue = value.toString();
-                            }),
-                            items: typeReponse,
-                            itemBuilder: (item) => RadioButtonBuilder(
-                              item,
-                            ),
                           ),
-                          // ...typeofresponse.map(SimpleCheckbox).toList(),
-                        ],
-                      )
-                    ],
-                  ),
+                        )),
+                  ],
                 ),
-                Text(_verticalGroupValue),
-              ],
-            ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, top: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Type de reponse",
+                    ),
+                    Column(
+                      children: [
+                        RadioGroup<String>.builder(
+                          groupValue: _verticalGroupValue,
+                          onChanged: (value) => setState(() {
+                            _verticalGroupValue = value.toString();
+                          }),
+                          items: typeReponse,
+                          itemBuilder: (item) => RadioButtonBuilder(
+                            item,
+                          ),
+                        ),
+                        // ...typeofresponse.map(SimpleCheckbox).toList(),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              // if (_verticalGroupValue == typeReponse[4] ||
+              //     _verticalGroupValue == typeReponse[3])
+              //   Column(
+              //     children: [
+              //       ElevatedButton(
+              //           onPressed: () {}, child: Text("Nombre de choix"))
+              //     ],
+              //   ),
+              // Text(_verticalGroupValue),
+            ],
           ),
         ),
-      ]),
-    ));
+      ),
+    ]);
   }
 
   Widget buildList(
@@ -269,7 +280,21 @@ class _QuestionCreateState extends State<QuestionCreate> {
       direction: DismissDirection.startToEnd,
       onDismissed: (direction) {
         taskItems.SuppElement(index);
-        if (index > 0) listClass.list.removeAt(index - 1);
+
+        // listClass.list.removeAt(index);
+        setState(() {
+          reponseTypeList.removeAt(index);
+          print(reponseTypeList);
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.green[200],
+            elevation: 2,
+            padding: EdgeInsetsGeometry.lerp(
+                EdgeInsets.all(12), EdgeInsets.all(12), 1),
+            content: Container(
+              height: 50,
+              child: Text("Le questionnaire a ete supprime avec success"),
+            )));
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 10, top: 15),
@@ -298,13 +323,19 @@ class _QuestionCreateState extends State<QuestionCreate> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    TextField(
-                      decoration: InputDecoration(
-                          hintText: listClass.list[index].toString()),
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Column(
+                    children: [
+                      Text(
+                        listClass.list[index].toString().toUpperCase(),
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 116, 116, 116),
+                            fontWeight: FontWeight.w800,
+                            fontSize: 18),
+                      )
+                    ],
+                  ),
                 ),
               ),
               Padding(
@@ -320,6 +351,7 @@ class _QuestionCreateState extends State<QuestionCreate> {
                             Column(
                               children: [
                                 Text("Type de reponse"),
+                                Text(reponseTypeList[index])
                               ],
                             )
                           ],

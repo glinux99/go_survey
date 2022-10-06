@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/questionnaire_list.dart';
-import 'package:go_survey/components/rubriques.dart';
+import 'package:go_survey/components/DrawerMenu/configs/rubriques.dart';
 
 class OldEnquete extends StatefulWidget {
   const OldEnquete({super.key});

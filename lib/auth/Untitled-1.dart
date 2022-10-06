@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_survey/components/enquetes_recentes.dart';
+import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/enquetes_recentes.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});

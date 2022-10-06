@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_survey/components/titre_btn_plus.dart';
+import 'package:go_survey/components/DrawerMenu/configs/titre_btn_plus.dart';
 import 'package:checkbox_grouped/checkbox_grouped.dart';
 import 'package:go_survey/models/dynamique_quest.dart';
 import 'package:go_survey/providers/list_provider.dart';
@@ -50,6 +50,7 @@ class _QuestionCreateState extends State<QuestionCreate> {
 
   int compteur = 0;
   late DynamicList listClass;
+  late DynamicList typeQuestion;
   var taskItems;
   @override
   void initState() {
@@ -63,6 +64,7 @@ class _QuestionCreateState extends State<QuestionCreate> {
     _globalKey = GlobalKey();
     taskItems = Provider.of<ListProvider>(context, listen: false);
     listClass = DynamicList(taskItems.list);
+    typeQuestion = DynamicList(taskItems.list);
     _controller = TextEditingController();
     setState(() {});
   }

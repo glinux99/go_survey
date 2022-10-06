@@ -18,76 +18,79 @@ class _EnqueteWidgetState extends State<EnqueteWidget> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Container(
-      // On prend la 40 % de la taille total de l ecran
-      width: size.width * .4,
-      margin: EdgeInsets.only(
-        left: 10,
-        top: 10 / 4,
-        bottom: 10 * 2.5,
-      ),
-      child: Column(
-        children: [
-          Image.asset(
-            widget.img,
-            height: 100,
-            fit: BoxFit.fill,
-          ),
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              padding: EdgeInsets.all(15 / 2),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(0, 10),
-                      blurRadius: 50,
-                      color: Colors.green.withOpacity(.23),
-                    )
-                  ]),
-              child: Flexible(
-                child: Wrap(
-                  children: [
-                    Text(
-                      widget.titre,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          maxLines: 1,
-                          "Questions",
-                          style: TextStyle(
+    return LayoutBuilder(
+      builder: (context, constraint) => Container(
+        // On prend la 40 % de la taille total de l ecran
+        width: size.width * .4,
+        margin: EdgeInsets.only(
+          left: 10,
+          top: 10 / 4,
+          bottom: 10 * 2.5,
+        ),
+
+        child: Column(
+          children: [
+            Image.asset(
+              widget.img,
+              height: 100,
+              fit: BoxFit.fill,
+            ),
+            GestureDetector(
+              onTap: () {},
+              child: Container(
+                padding: EdgeInsets.all(15 / 2),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10)),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 10),
+                        blurRadius: 50,
+                        color: Colors.green.withOpacity(.23),
+                      )
+                    ]),
+                child: Flexible(
+                  child: Wrap(
+                    children: [
+                      Text(
+                        widget.titre,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
                             color: Colors.black,
-                            fontSize: 12,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Spacer(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            maxLines: 1,
+                            "Questions",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                            ),
                           ),
-                        ),
-                        Text(
-                          widget.CountQ.toString(),
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 12,
-                          ),
-                        )
-                      ],
-                    )
-                  ],
+                          Text(
+                            widget.CountQ.toString(),
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 12,
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -203,14 +206,16 @@ class RubriqueCreateWidget extends StatelessWidget {
 }
 
 class AlertGoSUrvey extends StatelessWidget {
-  const AlertGoSUrvey(
+  AlertGoSUrvey(
       {super.key,
       required this.titre,
       required this.hintText,
-      required this.validation});
+      required this.validation,
+      this.output});
   final String titre;
   final String hintText;
   final Function validation;
+  late final String? output;
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -241,6 +246,9 @@ class AlertGoSUrvey extends StatelessWidget {
                       TextField(
                         autofocus: true,
                         onTap: () {},
+                        onChanged: (value) {
+                          output = value;
+                        },
                         decoration: InputDecoration(hintText: hintText),
                       )
                     ],

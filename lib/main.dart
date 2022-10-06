@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_survey/auth/login.dart';
-import 'package:go_survey/components/introduction_screen.dart';
+import 'package:go_survey/components/screen/introduction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool show = true;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
-  show = prefs.getBool("go_surveys") ?? true;
+  show = prefs.getBool("go_survey") ?? true;
   runApp(const MyApp());
 }
 

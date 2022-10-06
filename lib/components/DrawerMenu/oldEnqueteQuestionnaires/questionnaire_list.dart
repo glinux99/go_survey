@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/reponse_view.dart';
-import 'package:go_survey/components/enquetes_recentes.dart';
+import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/enquetes_recentes.dart';
+import 'package:go_survey/components/question_reponseView.dart';
+import 'package:go_survey/components/questionnaireView.dart';
 
 class QuestionnnaireList extends StatefulWidget {
   const QuestionnnaireList({super.key});
@@ -34,8 +35,13 @@ class _QuestionnairesState extends State<Questionnaires> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ReponseView()));
+              // a utiliser
+              // Navigator.push(context,
+              //     MaterialPageRoute(builder: (context) => ReponseView()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => QuestionReponseViewView()));
             },
             child: EnqueteRecente(
                 titre: "Enquete sur les enfants malades",

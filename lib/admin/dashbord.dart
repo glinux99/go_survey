@@ -1,14 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:go_survey/components/DrawerMenu/licence.dart';
-import 'package:go_survey/components/enquetes_recentes.dart';
-import 'package:go_survey/components/headerDashboard.dart';
-import 'package:go_survey/components/newsurvey.dart';
-import 'package:go_survey/components/rubriques.dart';
-import 'package:go_survey/components/titre_btn_plus.dart';
-
-import '../components/DrawerMenu/parametre.dart';
+import 'package:go_survey/components/DrawerMenu/headerDashboard.dart';
+import 'package:go_survey/components/colors/colors.dart';
+import '../components/DrawerMenu/params/parametre.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key, required this.RouteLink, this.titre = ""});
@@ -31,7 +26,7 @@ class Dashboard extends StatelessWidget {
 
   AppBar AppBarContructeur(String titre) {
     return AppBar(
-      backgroundColor: Colors.green,
+      // backgroundColor: Colors.green,
       // elevation: 0,
       // leading: IconButton(
       //     onPressed: () {

@@ -182,6 +182,7 @@ class _QuestionCreateState extends State<QuestionCreate> {
                       questionSave.question = question;
                       questionSave.typeReponse = reponseTypeList[typereponse];
                       questionSave.rubriqueId = rubriqueId;
+                      typereponse++;
                       questionSave.userId = userId;
                       var result =
                           await questionnaireService.saveQuestion(questionSave);
@@ -189,8 +190,10 @@ class _QuestionCreateState extends State<QuestionCreate> {
                           reponseTypeList[typereponse] != 1) {
                         var modaliteSave = ModaliteModel();
                       }
-                      typereponse++;
-                      print(result);
+                      print(typereponse);
+                      print('ok');
+                      // print(result);
+
                       // add params for questionnaireRe
                       // Navigator.push(
                       //     context,

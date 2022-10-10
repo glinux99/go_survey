@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_survey/components/colors/colors.dart';
 import 'package:go_survey/models/questionnaires/questionnaire.dart';
 import 'package:go_survey/models/rubriques/rubrique.dart';
+import 'package:group_radio_button/group_radio_button.dart';
 
 import '../models/questionnaires/questionnaire_service.dart';
 
@@ -29,10 +30,8 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
   }
 
   getRubriques() async {
-    var recensement = QuestionnaireModel();
-    var rubriques = await _questionnaireService.getQuestionByIdRubrique(
-        recensement, widget.questIndex);
-    print(rubriques);
+    var rubriques = await _questionnaireService
+        .getQuestionByIdRubrique(widget.questIndex! + 1);
     setState(() {
       rubriques.forEach((rub) {
         var rubriqueModel = QuestionnaireModel();
@@ -50,16 +49,14 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-    List<String> question = [
-      'Quel est votre nom?',
-      'Quel est votre age?',
-      'Quel est votre genre svp',
-      'Que faites vous',
-      'Etes vous malade',
-      'Avex vous un enfant de moijns de 13ans?',
-      'Croyexz vous en une puissanc3 superieure?',
-      'Savez vous qu il existe une force qui depasse tout ce dont nous savons',
-      'Avez vous deja eu peur un jour jus qu a crever dans votre froc?'
+    late String _verticalGroupValue = "1. Oui";
+    int? _groupValue;
+    List<String> modaliteReponse = [
+      '1. Oui',
+      'Reponse Numerique',
+      'Modalite [1. Oui, 2. Non]',
+      'Choix mutlitples',
+      'Autres'
     ];
     return Scaffold(
       appBar: AppBar(
@@ -94,6 +91,8 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
                           widget.questionnaires.description ?? '',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                       )),
                     ))
@@ -144,8 +143,27 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
                                             padding: const EdgeInsets.all(12.0),
                                             child: Column(
                                               children: [
-                                                Text(question[index]),
-                                                TextFormField()
+                                                Text(questionsList[index]
+                                                    .question
+                                                    .toString()),
+                                                if (questionsList[index]
+                                                        .typeReponse
+                                                        .toString() ==
+                                                    "Reponse textuelle")
+                                                  TextFormField(),
+                                                if (questionsList[index]
+                                                        .typeReponse
+                                                        .toString() ==
+                                                    "Reponse Numerique")
+                                                  TextFormField(
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                  ),
+                                                if (questionsList[index]
+                                                        .typeReponse
+                                                        .toString() ==
+                                                    "Modalite [1. Oui, 2. Non]")
+                                                  _buildItem("GEnre", 1),
                                               ],
                                             ),
                                           ))),
@@ -157,6 +175,25 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
                   }))
         ],
       ),
+    );
+  }
+
+  int? _groupValue;
+  Widget _buildItem(String text, int value) {
+    return ListTile(
+      title: Text(text),
+
+      leading: Radio<int>(
+        groupValue: _groupValue,
+        value: value,
+        onChanged: (int? value) {
+          setState(() {
+            _groupValue = value;
+          });
+        },
+      ),
+
+      // other arguments
     );
   }
 }

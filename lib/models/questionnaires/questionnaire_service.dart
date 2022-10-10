@@ -12,9 +12,9 @@ class QuestionnaireService {
         "questionnaires", recensement.questionnaireMap());
   }
 
-  getQuestionByIdRubrique(QuestionnaireModel recensement, rubriqueValue) async {
+  getQuestionByIdRubrique(rubriqueValue) async {
     return await _savedataSurvey.readDataByContraints(
-        recensement, 'rubriqueId', rubriqueValue);
+        'questionnaires', 'rubriqueId', rubriqueValue);
   }
 
   getQuestionById(id) async {

@@ -1,36 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:go_survey/components/colors/colors.dart';
+import 'package:go_survey/models/questionnaires/questionnaire.dart';
+import 'package:go_survey/models/rubriques/rubrique.dart';
+
+import '../models/questionnaires/questionnaire_service.dart';
 
 class QuestionReponseViewView extends StatefulWidget {
-  const QuestionReponseViewView({super.key});
-
+  final RubriqueModel questionnaires;
+  final int? questIndex;
+  QuestionReponseViewView(
+      {super.key, required this.questionnaires, this.questIndex});
   @override
   State<QuestionReponseViewView> createState() =>
       _QuestionReponseViewViewState();
 }
 
 class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
+  late List<QuestionnaireModel> questionsList;
+
+  final _questionnaireService = QuestionnaireService();
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("Debut de l'enquete"),
-          centerTitle: true,
-        ),
-        body: QuestionReponseViewViewBody());
+  @override
+  void initState() {
+    getRubriques();
+    questionsList = <QuestionnaireModel>[];
+    super.initState();
   }
-}
 
-class QuestionReponseViewViewBody extends StatefulWidget {
-  const QuestionReponseViewViewBody({super.key});
+  getRubriques() async {
+    var recensement = QuestionnaireModel();
+    var rubriques = await _questionnaireService.getQuestionByIdRubrique(
+        recensement, widget.questIndex);
+    print(rubriques);
+    setState(() {
+      rubriques.forEach((rub) {
+        var rubriqueModel = QuestionnaireModel();
+        rubriqueModel.id = rub['id'];
+        rubriqueModel.typeReponse = rub['typeReponse'];
+        rubriqueModel.question = rub['question'];
+        rubriqueModel.userId = rub['userId'];
+        rubriqueModel.rubriqueId = rub['rubriqueId'];
+        questionsList.add(rubriqueModel);
+      });
+    });
+  }
 
-  @override
-  State<QuestionReponseViewViewBody> createState() =>
-      _QuestionReponseViewViewBodyState();
-}
-
-class _QuestionReponseViewViewBodyState
-    extends State<QuestionReponseViewViewBody> {
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -47,7 +62,10 @@ class _QuestionReponseViewViewBodyState
       'Avez vous deja eu peur un jour jus qu a crever dans votre froc?'
     ];
     return Scaffold(
-      // backgroundColor: kprimary,
+      appBar: AppBar(
+        title: Text("Debut de l'enquete"),
+        centerTitle: true,
+      ),
       body: Column(
         children: [
           Container(
@@ -73,7 +91,7 @@ class _QuestionReponseViewViewBodyState
                           child: Padding(
                         padding: const EdgeInsets.only(left: 25, right: 10),
                         child: Text(
-                          "Name rubrique ",
+                          widget.questionnaires.description ?? '',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -87,10 +105,10 @@ class _QuestionReponseViewViewBodyState
           ),
           Expanded(
               child: ListView.builder(
-                  itemCount: question.length,
+                  itemCount: questionsList.length,
                   itemBuilder: (context, index) {
                     return Dismissible(
-                      key: Key(question.toString()),
+                      key: Key(questionsList[index].question.toString()),
                       // onDismissed: ((direction) {
                       //   setState(() {
                       //     question.removeAt(index);

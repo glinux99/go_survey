@@ -28,7 +28,22 @@ class CrudOperation {
 
   readDataById(table, itemId) async {
     var connection = await database;
-    return await connection?.query(table, where: 'id=?', whereArgs: [itemId]);
+    return await connection?.query(table,
+        where: 'id=?', whereArgs: [itemId], limit: 1);
+  }
+
+  readDataLogin(table, emailUser, passwordUser) async {
+    var connection = await database;
+    return await connection?.query(table,
+        where: 'email=? AND password=?',
+        whereArgs: [emailUser, passwordUser],
+        limit: 1);
+  }
+
+  readDataByContraints(table, champ, champValue) async {
+    var connection = await database;
+    return await connection
+        ?.query(table, where: '$champ =?', whereArgs: [champValue]);
   }
 
   updateData(table, data) async {

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:checkbox_grouped/checkbox_grouped.dart';
+import 'package:go_survey/components/question_reponseView.dart';
 import 'package:go_survey/models/dynamique_quest.dart';
+import 'package:go_survey/models/modalites/modalite.dart';
+import 'package:go_survey/models/modalites/modalite_service.dart';
+import 'package:go_survey/models/questionnaires/questionnaire.dart';
+import 'package:go_survey/models/questionnaires/questionnaire_service.dart';
 import 'package:go_survey/providers/list_provider.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class QuestionnaireCreate extends StatefulWidget {
   const QuestionnaireCreate({super.key, required this.title});
@@ -52,10 +58,16 @@ class _QuestionCreateState extends State<QuestionCreate> {
   late DynamicList listClass;
   late List<String> reponseTypeList;
   var taskItems;
+  late List<QuestionnaireModel> questionnaireList;
+  late List<ModaliteModel> modaliteList;
+  var questionnaireService = QuestionnaireService();
+  var modaliteService = ModaliteService();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    questionnaireList = [];
+    modaliteList = [];
     WidgetsBinding.instance.addPostFrameCallback((timestamp) {
       for (int i = 0; i < 3; i++) {
         valeurSelected.putIfAbsent(i, () => ""); //valeur par defaut
@@ -154,17 +166,56 @@ class _QuestionCreateState extends State<QuestionCreate> {
                     size: 40,
                   ),
                 ),
-                Icon(
-                  Icons.remove_red_eye,
-                  size: 40,
+                IconButton(
+                  onPressed: () async {
+                    var recPref = await SharedPreferences.getInstance();
+                    var userId = recPref.getInt('authId');
+                    var rubriqueId = recPref.getInt('rubriqueCurrentId');
+                    print(reponseTypeList.length.toString() +
+                        ' ' +
+                        listClass.list.length.toString());
+
+                    // modaliteSave.
+                    int typereponse = 0;
+                    listClass.list.forEach((question) async {
+                      var questionSave = QuestionnaireModel();
+                      questionSave.question = question;
+                      questionSave.typeReponse = reponseTypeList[typereponse];
+                      questionSave.rubriqueId = rubriqueId;
+                      questionSave.userId = userId;
+                      var result =
+                          await questionnaireService.saveQuestion(questionSave);
+                      if (reponseTypeList[typereponse] != 0 ||
+                          reponseTypeList[typereponse] != 1) {
+                        var modaliteSave = ModaliteModel();
+                      }
+                      typereponse++;
+                      print(result);
+                      // add params for questionnaireRe
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => QuestionReponseViewView()));
+                    });
+                  },
+                  icon: Icon(
+                    Icons.check_circle_rounded,
+                    size: 40,
+                  ),
                 ),
-                Icon(
-                  Icons.check_circle_rounded,
-                  size: 40,
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.remove_red_eye,
+                    size: 40,
+                  ),
                 ),
-                Icon(
-                  Icons.close_sharp,
-                  size: 40,
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.close_sharp,
+                    size: 40,
+                  ),
                 )
               ],
             ),
@@ -285,6 +336,7 @@ class _QuestionCreateState extends State<QuestionCreate> {
         setState(() {
           reponseTypeList.removeAt(index);
           print(reponseTypeList);
+          print(listClass.list);
         });
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             backgroundColor: Colors.green[200],

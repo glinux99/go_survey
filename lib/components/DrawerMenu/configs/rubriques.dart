@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_survey/components/DrawerMenu/headerDashboard.dart';
 import 'package:go_survey/components/DrawerMenu/newEnquete/questionnaires_creates.dart';
+import 'package:go_survey/models/modalites/modalite_service.dart';
+import 'package:go_survey/models/rubriques/rubrique_service.dart';
 
 class EnqueteWidget extends StatefulWidget {
   const EnqueteWidget({
@@ -55,7 +58,7 @@ class _EnqueteWidgetState extends State<EnqueteWidget> {
                   child: Wrap(
                     children: [
                       Text(
-                        widget.titre,
+                        '${widget.titre}\n',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -101,6 +104,8 @@ class RubriqueCreateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var _alertController = TextEditingController();
+    var _recensementService = RubriqueService();
     Size size = MediaQuery.of(context).size;
     return Container(
       decoration: BoxDecoration(
@@ -119,18 +124,25 @@ class RubriqueCreateWidget extends StatelessWidget {
           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return AlertGoSUrvey(
-                  titre: "Creer une ribrique",
-                  hintText: "Entrer le nom de votre rubrique",
-                  validation: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => QuestionnaireCreate(
-                                  title: "Creation du questionnaire",
-                                )));
-                  },
-                );
+                // return AlertGoSUrvey(
+                //   titre: "Creer une ribrique",
+                //   hintText: "Entrer le nom de votre rubrique",
+                //   validation: () {
+                //     Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (context) => QuestionnaireCreate(
+                //                   title: "Creation du questionnaire",
+                //                 )));
+                //   },
+                // );
+                return AlertGoSurvey(
+                    titre: "Creer une enquete",
+                    hinText: "Tapez le nom de votre enquete",
+                    prefId: "rubriqueCurrentId",
+                    routeLink: "newRubrique",
+                    alertController: _alertController,
+                    recensementService: _recensementService);
               });
         },
         child: Column(
@@ -168,15 +180,16 @@ class RubriqueCreateWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          maxLines: 1,
-                          "Questions",
+                          maxLines: 2,
+                          "\nQuestions",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 12,
                           ),
                         ),
                         Text(
-                          "0",
+                          "\n0",
+                          maxLines: 2,
                           style: TextStyle(
                             color: Colors.green,
                             fontSize: 12,
@@ -211,10 +224,12 @@ class AlertGoSUrvey extends StatelessWidget {
       required this.titre,
       required this.hintText,
       required this.validation,
+      this.onChanged,
       this.output});
   final String titre;
   final String hintText;
   final Function validation;
+  final Function? onChanged;
   late final String? output;
   @override
   Widget build(BuildContext context) {
@@ -246,9 +261,7 @@ class AlertGoSUrvey extends StatelessWidget {
                       TextField(
                         autofocus: true,
                         onTap: () {},
-                        onChanged: (value) {
-                          output = value;
-                        },
+                        onChanged: onChanged!(),
                         decoration: InputDecoration(hintText: hintText),
                       )
                     ],

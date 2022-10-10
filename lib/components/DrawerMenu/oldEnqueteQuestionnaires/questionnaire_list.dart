@@ -38,10 +38,11 @@ class _QuestionnairesState extends State<Questionnaires> {
               // a utiliser
               // Navigator.push(context,
               //     MaterialPageRoute(builder: (context) => ReponseView()));
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => QuestionReponseViewView()));
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => QuestionReponseViewView(
+              //             questionnaires: rubriquesList[index])));
             },
             child: EnqueteRecente(
                 titre: "Enquete sur les enfants malades",

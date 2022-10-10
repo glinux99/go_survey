@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_survey/admin/dashbord.dart';
 import 'package:go_survey/components/DrawerMenu/configs/taille_config.dart';
-import 'package:go_survey/components/screen/home_screen.dart';
+import 'package:go_survey/components/colors/colors.dart';
+import 'package:go_survey/main.dart';
 import 'package:go_survey/models/users/user.dart';
 import 'package:go_survey/models/users/user_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginSignup extends StatefulWidget {
   const LoginSignup({super.key});
@@ -21,11 +24,16 @@ class _LoginSignupState extends State<LoginSignup> {
   var phoneController = TextEditingController();
   var passwordController = TextEditingController();
   var nameController = TextEditingController();
+  late List<User> userUnique;
+  late List<User> userAuth;
   var _userService = UserService();
+
   @override
   void initState() {
     super.initState();
     connecter = true;
+    userUnique = [];
+    userAuth = [];
   }
 
   @override
@@ -39,17 +47,17 @@ class _LoginSignupState extends State<LoginSignup> {
             left: 0,
             child: Container(
               height: 300,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage("assets/img/2.png"), fit: BoxFit.fill)),
               child: Container(
-                padding: EdgeInsets.only(top: 90, left: 20),
-                color: Color.fromARGB(255, 67, 153, 59).withOpacity(.80),
+                padding: const EdgeInsets.only(top: 90, left: 20),
+                color: const Color.fromARGB(255, 67, 153, 59).withOpacity(.80),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     RichText(
-                      text: TextSpan(
+                      text: const TextSpan(
                           text: "Bienvenu dans ",
                           style: TextStyle(
                               fontSize: 25,
@@ -59,16 +67,16 @@ class _LoginSignupState extends State<LoginSignup> {
                                 text: "Gosurvey",
                                 style: TextStyle(
                                     fontSize: 25,
-                                    color: Color.fromARGB(255, 0, 0, 0),
+                                    color: kBlack,
                                     fontWeight: FontWeight.bold))
                           ]),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    Text(
+                    const Text(
                       "Le leader dans les enquetes",
-                      style: TextStyle(letterSpacing: 1, color: Colors.white),
+                      style: TextStyle(letterSpacing: 1, color: kWhite),
                     )
                   ],
                 ),
@@ -78,22 +86,22 @@ class _LoginSignupState extends State<LoginSignup> {
           Form(
             key: _key,
             child: AnimatedPositioned(
-              duration: Duration(milliseconds: 400),
+              duration: const Duration(milliseconds: 400),
               curve: Curves.bounceInOut,
               top: connecter ? inscriptErreur : 230,
               child: AnimatedContainer(
-                duration: Duration(milliseconds: 0),
+                duration: const Duration(milliseconds: 0),
                 curve: Curves.bounceInOut,
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 // height: connecter ? 450 : 400,
                 width: MediaQuery.of(context).size.width - 40,
-                margin: EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: kWhite,
                     borderRadius: BorderRadius.circular(15),
                     boxShadow: [
                       BoxShadow(
-                          color: Colors.black.withOpacity(.3),
+                          color: kBlack.withOpacity(.3),
                           spreadRadius: 5,
                           blurRadius: 15)
                     ]),
@@ -116,15 +124,16 @@ class _LoginSignupState extends State<LoginSignup> {
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                     color: !connecter
-                                        ? Colors.green
-                                        : Color.fromARGB(172, 76, 175, 79)),
+                                        ? kGreen
+                                        : const Color.fromARGB(
+                                            172, 76, 175, 79)),
                               ),
                               if (!connecter)
                                 Container(
-                                  margin: EdgeInsets.only(top: 3),
+                                  margin: const EdgeInsets.only(top: 3),
                                   height: 3,
                                   width: 100,
-                                  color: Colors.green,
+                                  color: kGreen,
                                 )
                             ],
                           ),
@@ -144,15 +153,16 @@ class _LoginSignupState extends State<LoginSignup> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: connecter
-                                          ? Colors.green
-                                          : Color.fromARGB(172, 76, 175, 79)),
+                                          ? kGreen
+                                          : const Color.fromARGB(
+                                              172, 76, 175, 79)),
                                 ),
                                 if (connecter)
                                   Container(
-                                    margin: EdgeInsets.only(top: 3),
+                                    margin: const EdgeInsets.only(top: 3),
                                     height: 3,
                                     width: 100,
-                                    color: Colors.green,
+                                    color: kGreen,
                                   ),
                               ],
                             ),
@@ -160,44 +170,116 @@ class _LoginSignupState extends State<LoginSignup> {
                         )
                       ],
                     ),
-                    if (connecter) EnregistementSection(),
-                    if (!connecter) LoginSection(),
-                    SizedBox(
+                    if (connecter) enregistrementSection(),
+                    if (!connecter) loginSection(),
+                    const SizedBox(
                       height: 20,
                     ),
                     TextButton(
                       onPressed: () async {
                         if (_key.currentState!.validate()) {
                           _key.currentState!.save();
-                          var _user = User();
-                          _user.name = nameController.text;
-                          _user.email = emailController.text;
-                          _user.phone = phoneController.text;
-                          _user.password = passwordController.text;
-                          var _result = await _userService.SaveUser(_user);
-                          print(_result);
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Dashboard(
-                                        RouteLink: "mainDashboard",
-                                      )));
+                          var user = User();
+                          user.name = nameController.text;
+                          user.email = emailController.text;
+                          user.phone = phoneController.text;
+                          user.password = passwordController.text;
+                          final logPref = await SharedPreferences.getInstance();
+                          if (connecter) {
+                            var result = await _userService.saveUser(user);
+                            logPref.setBool('login', true);
+                            result = await _userService.loginUser(
+                                user.email, user.password);
+                            var userId;
+                            // for (var entry in result[0].entries) {
+                            //   if (entry.key == 'id') userId = entry.value;
+                            //   if (entry.key == 'name')
+                            //     logPref.setString('userName', entry.value);
+                            //   if (entry.key == 'phone')
+                            //     logPref.setString('userPhone', entry.value);
+                            // }
+                            if (result.isEmpty != true) {
+                              result.forEach((userUnik) {
+                                setState(() {
+                                  var userModel = User();
+                                  userModel.id = userUnik['id'];
+                                  userModel.name = userUnik['name'];
+                                  userModel.email = userUnik['email'];
+                                  userModel.phone = userUnik['phone'];
+                                  userModel.password = userUnik['password'];
+                                  userAuth.add(userModel);
+                                  userId = userAuth[0].id;
+                                  logPref.setString(
+                                      'userName', userAuth[0].name.toString());
+                                  logPref.setString('userPhone',
+                                      userAuth[0].phone.toString());
+                                });
+                              });
+                            }
+                            logPref.setInt('authId', userId);
+                            // ignore: use_build_context_synchronously
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Dashboard(
+                                          RouteLink: "mainDashboard",
+                                        )));
+                            print(result);
+                          }
+                          if (!connecter) {
+                            var result = await _userService.loginUser(
+                                user.email, user.password);
+
+                            print(result);
+                            if (result.isEmpty != true) {
+                              var userId;
+                              print('login is okay');
+                              for (var entry in result[0].entries) {
+                                if (entry.key == 'id') userId = entry.value;
+                                if (entry.key == 'name')
+                                  logPref.setString('userName', entry.value);
+                                if (entry.key == 'phone')
+                                  logPref.setString('userPhone', entry.value);
+                              }
+                              logPref.setInt('authId', userId);
+                              print(userId);
+                              // print(userUnique[0].email);
+                              // ignore: use_build_context_synchronously
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Dashboard(
+                                            RouteLink: "mainDashboard",
+                                          )));
+                              logPref.setBool('login', true);
+                            } else {
+                              Fluttertoast.showToast(
+                                msg: "Echec d'authentification",
+                                toastLength: Toast.LENGTH_SHORT,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.black,
+                                textColor: Colors.white,
+                                fontSize: 16.0,
+                              );
+                              print('login is failled');
+                            }
+                          }
                         }
                       },
                       child: !connecter
-                          ? Text(
+                          ? const Text(
                               "Se connecter",
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: kWhite),
                             )
-                          : Text("S'incrire",
-                              style: TextStyle(color: Colors.white)),
+                          : const Text("S'incrire",
+                              style: TextStyle(color: kWhite)),
                       style: TextButton.styleFrom(
-                          side: BorderSide(width: 1, color: Colors.grey),
-                          minimumSize: Size(145, 40),
+                          side: const BorderSide(width: 1, color: kGrey),
+                          minimumSize: const Size(145, 40),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
-                          // primary: Colors.white,
-                          backgroundColor: Colors.green),
+                          // primary: kWhite,
+                          backgroundColor: kGreen),
                     ),
                   ],
                 ),
@@ -212,12 +294,12 @@ class _LoginSignupState extends State<LoginSignup> {
                 children: [
                   Text(!connecter ? "Ou se connecter avec" : "S'incrire avec"),
                   Container(
-                    margin: EdgeInsets.only(right: 20, left: 20, top: 15),
+                    margin: const EdgeInsets.only(right: 20, left: 20, top: 15),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        SocialButton(Icons.facebook, "Facebook", Colors.blue),
-                        SocialButton(Icons.plus_one, "Google", Colors.red)
+                        socialButton(Icons.facebook, "Facebook", kFacebook),
+                        socialButton(Icons.plus_one, "Google", kGoogle)
                       ],
                     ),
                   )
@@ -228,20 +310,20 @@ class _LoginSignupState extends State<LoginSignup> {
     );
   }
 
-  TextButton SocialButton(IconData icon, String titre, Color bg) {
+  TextButton socialButton(IconData icon, String titre, Color bg) {
     return TextButton(
         onPressed: () {},
         style: TextButton.styleFrom(
-            side: BorderSide(width: 1, color: Colors.grey),
-            minimumSize: Size(145, 40),
+            side: const BorderSide(width: 1, color: kGrey),
+            minimumSize: const Size(145, 40),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            primary: Colors.white,
+            primary: kWhite,
             backgroundColor: bg),
         child: Row(
           children: [
             Icon(icon),
-            SizedBox(
+            const SizedBox(
               width: 5,
             ),
             Text(titre)
@@ -249,52 +331,54 @@ class _LoginSignupState extends State<LoginSignup> {
         ));
   }
 
-  Container EnregistementSection() {
+  Container enregistrementSection() {
     return Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 20),
       child: Column(
         children: [
           TextFieldContainer(
             child: TextFormField(
               controller: nameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   icon: Icon(
                     Icons.person,
-                    color: Colors.green,
+                    color: kGreen,
                   ),
                   labelText: "Votre nom"),
               validator: (value) {
-                if (value == null || value.isEmpty)
+                if (value == null || value.isEmpty) {
                   return 'Ce champs est requi';
+                }
                 return null;
               },
             ),
           ),
           TextFormField(
             controller: emailController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelStyle: TextStyle(color: Color.fromARGB(183, 0, 0, 0)),
                 icon: Icon(
                   Icons.email_sharp,
-                  color: Colors.green,
+                  color: kGreen,
                 ),
-                iconColor: Colors.green,
+                iconColor: kGreen,
                 labelText: 'Adresse E-mail'),
             validator: (value) {
               if (value == null || value.isEmpty) return 'Ce champs est requi';
               String pattern = r'\w+@\w+\.\w+';
-              if (!RegExp(pattern).hasMatch(value))
+              if (!RegExp(pattern).hasMatch(value)) {
                 return 'Format incorrect pour l\'addresse E-mail';
+              }
               return null;
             },
           ),
           TextFieldContainer(
             child: TextFormField(
               controller: phoneController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   icon: Icon(
                     Icons.phone_in_talk,
-                    color: Colors.green,
+                    color: kGreen,
                   ),
                   labelText: "+243"),
             ),
@@ -303,21 +387,23 @@ class _LoginSignupState extends State<LoginSignup> {
               child: TextFormField(
             controller: passwordController,
             validator: (value) {
-              if (value == null || value.isEmpty)
+              if (value == null || value.isEmpty) {
                 return '''Le mot de passe ne peut pas etre null ou vide''';
+              }
               String pattern = r'^(\w+).{7,}$';
-              if (!RegExp(pattern).hasMatch(value))
+              if (!RegExp(pattern).hasMatch(value)) {
                 return '''8 characteres sont requis pour le mot de passe''';
+              }
               return null;
             },
             obscureText: true,
             obscuringCharacter: "*",
             enableSuggestions: false,
             autocorrect: false,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               icon: Icon(
                 Icons.local_activity,
-                color: Colors.green,
+                color: kGreen,
               ),
               hintText: '*****************',
             ),
@@ -327,26 +413,27 @@ class _LoginSignupState extends State<LoginSignup> {
     );
   }
 
-  Container LoginSection() {
+  Container loginSection() {
     return Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 20),
       child: Column(
         children: [
           TextFormField(
             controller: emailController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 labelStyle: TextStyle(color: Color.fromARGB(183, 0, 0, 0)),
                 icon: Icon(
                   Icons.email_sharp,
-                  color: Colors.green,
+                  color: kGreen,
                 ),
-                iconColor: Colors.green,
+                iconColor: kGreen,
                 labelText: 'Adresse E-mail'),
             validator: (value) {
               if (value == null || value.isEmpty) return 'Ce champs est requi';
               String pattern = r'\w+@\w+\.\w+';
-              if (!RegExp(pattern).hasMatch(value))
+              if (!RegExp(pattern).hasMatch(value)) {
                 return 'Format incorrect pour l\'addresse E-mail';
+              }
               return null;
             },
           ),
@@ -354,21 +441,23 @@ class _LoginSignupState extends State<LoginSignup> {
               child: TextFormField(
             controller: passwordController,
             validator: (value) {
-              if (value == null || value.isEmpty)
+              if (value == null || value.isEmpty) {
                 return '''Le mot de passe ne peut pas etre null ou vide''';
+              }
               String pattern = r'^(\w+).{7,}$';
-              if (!RegExp(pattern).hasMatch(value))
+              if (!RegExp(pattern).hasMatch(value)) {
                 return '''8 characteres sont requis pour le mot de passe''';
+              }
               return null;
             },
             obscureText: true,
             obscuringCharacter: "*",
             enableSuggestions: false,
             autocorrect: false,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               icon: Icon(
                 Icons.local_activity,
-                color: Colors.green,
+                color: kGreen,
               ),
               hintText: '*****************',
             ),
@@ -381,22 +470,22 @@ class _LoginSignupState extends State<LoginSignup> {
                   Row(
                     children: [
                       Checkbox(
-                          activeColor: Colors.green,
+                          activeColor: kGreen,
                           value: souvenir,
                           onChanged: (value) {
                             setState(() {
                               souvenir = !souvenir;
                             });
                           }),
-                      Text(
+                      const Text(
                         "Se souvenir de moi",
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                        style: TextStyle(fontSize: 12, color: kGrey),
                       ),
                     ],
                   ),
                   TextButton(
                       onPressed: () {},
-                      child: Text(
+                      child: const Text(
                         "Mot de passe oublie?",
                         style: TextStyle(fontSize: 12),
                       ))
@@ -418,10 +507,10 @@ class TextFieldContainer extends StatelessWidget {
     Size taille = MediaQuery.of(context).size;
     return Container(
       // margin: EdgeInsets.symmetric(vertical: 10),
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       width: taille.width * .8,
       decoration: BoxDecoration(
-        color: Colors.white38,
+        color: kWhite,
         borderRadius: BorderRadius.circular(30),
       ),
       child: child,
@@ -452,7 +541,7 @@ class _ButtonContinueState extends State<ButtonContinue> {
             child: Text(
               widget.texte,
               style: TextStyle(
-                  fontSize: screenProportionGetWidht(17), color: Colors.white),
+                  fontSize: screenProportionGetWidht(17), color: kWhite),
             )),
       ),
     );

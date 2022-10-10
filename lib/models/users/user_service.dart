@@ -6,7 +6,15 @@ class UserService {
   UserService() {
     _savedataUser = CrudOperation();
   }
-  SaveUser(User user) async {
+  saveUser(User user) async {
     return await _savedataUser.insertData("users", user.userMap());
+  }
+
+  loginUser(email, password) async {
+    return await _savedataUser.readDataLogin('users', email, password);
+  }
+
+  getUserById(id) async {
+    return await _savedataUser.readDataById('users', id);
   }
 }

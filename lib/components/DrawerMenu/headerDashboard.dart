@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:go_survey/admin/dashbord.dart';
+import 'package:go_survey/auth/login.dart';
+import 'package:go_survey/components/DrawerMenu/newEnquete/questionnaires_creates.dart';
 import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/oldEnquete.dart';
+import 'package:go_survey/components/DrawerMenu/user/userprofile.dart';
 import 'package:go_survey/components/bodyDashboard.dart';
 import 'package:go_survey/components/DrawerMenu/newEnquete/newsurvey.dart';
 import 'package:go_survey/components/DrawerMenu/configs/rubriques.dart';
 import 'package:go_survey/components/colors/colors.dart';
+import 'package:go_survey/models/modalites/modalite.dart';
+import 'package:go_survey/models/modalites/modalite_service.dart';
+import 'package:go_survey/models/recensements/recensement.dart';
+import 'package:go_survey/models/recensements/recensement_service.dart';
+import 'package:go_survey/models/rubriques/rubrique.dart';
+import 'package:go_survey/models/rubriques/rubrique_service.dart';
+import 'package:go_survey/models/users/user.dart';
+import 'package:go_survey/models/users/user_service.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:rating_dialog/rating_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HeaderDashboard extends StatelessWidget {
+class HeaderDashboard extends StatefulWidget {
   const HeaderDashboard({
     Key? key,
     required this.size,
@@ -17,10 +29,15 @@ class HeaderDashboard extends StatelessWidget {
   final Size size;
 
   @override
+  State<HeaderDashboard> createState() => _HeaderDashboardState();
+}
+
+class _HeaderDashboardState extends State<HeaderDashboard> {
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 15 * 2.5),
-      height: size.height * .2,
+      height: widget.size.height * .2,
       child: Stack(
         children: [
           Container(
@@ -29,7 +46,7 @@ class HeaderDashboard extends StatelessWidget {
               right: 15,
               bottom: 36 + 15,
             ),
-            height: size.height * .2 - 27,
+            height: widget.size.height * .2 - 27,
             decoration: BoxDecoration(
                 color: Colors.green,
                 borderRadius: BorderRadius.only(
@@ -106,39 +123,152 @@ ThemeData _themeLight =
     ThemeData(primarySwatch: Colors.green, brightness: Brightness.light);
 
 class _MenuGaucheState extends State<MenuGauche> {
+  bool profilevieuw = false;
+  var _alertController = TextEditingController();
+  int _currIndex = 1;
+  var _userService = UserService();
+  var _recensementService = RecensementService();
+  var user;
+  late String userName = 'Daniel';
+  late String userPhone = '+243 970912428';
+  late List<User> userUnique = [];
+  getAuthUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    var result = await _userService.getUserById(prefs.getInt('authId'));
+    userName = prefs.getString('userName') ?? 'Daniel';
+    userPhone = prefs.getString('userPhone') ?? '+243 970912428';
+    result.forEach((userUnik) {
+      setState(() {
+        var userModel = User();
+        userModel.id = userUnik['id'];
+        userModel.name = userUnik['name'];
+        userModel.email = userUnik['email'];
+        userModel.phone = userUnik['phone'];
+        userModel.password = userUnik['password'];
+        userUnique.add(userModel);
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    getAuthUser();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      elevation: 0,
       child: ListView(
         children: [
-          UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-                color: Colors.green[400],
-                borderRadius:
-                    BorderRadius.only(bottomRight: Radius.circular(15))),
-            accountName: Text("Daniel KIKIMBA"),
-            accountEmail: Text("genesiskikimba@gmail.com"),
-            currentAccountPicture:
-                CircleAvatar(foregroundImage: AssetImage("assets/img/1.jpg")),
-            otherAccountsPictures: [
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    iconBinary = !iconBinary;
-                    kprimary = Colors.green;
-                  });
-                },
-                icon: Icon(
-                  iconBinary ? _themeDarkIcon : _themeLightIcon,
-                  color: Colors.white,
+          DrawerHeader(
+            decoration: const BoxDecoration(
+              color: Colors.green,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: CircleAvatar(
+                    backgroundColor: Colors.green,
+                    foregroundImage: AssetImage("assets/img/1.jpg"),
+                    child: Text(
+                      'user',
+                    ),
+                    radius: 34,
+                  ),
                 ),
-              )
-            ],
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      profilevieuw = !profilevieuw;
+                      _currIndex = _currIndex == 0 ? 1 : 0;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              userName,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              userPhone,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 200),
+                                transitionBuilder: (child, anim) =>
+                                    RotationTransition(
+                                      turns: child.key == ValueKey('icon1')
+                                          ? Tween<double>(begin: 1, end: 0.75)
+                                              .animate(anim)
+                                          : Tween<double>(begin: 0.75, end: 1)
+                                              .animate(anim),
+                                      child: FadeTransition(
+                                          opacity: anim, child: child),
+                                    ),
+                                child: _currIndex == 0
+                                    ? Icon(Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        key: const ValueKey('icon1'))
+                                    : Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: Colors.white,
+                                        key: const ValueKey('icon2'),
+                                      )),
+                            onPressed: () {
+                              setState(() {
+                                profilevieuw = !profilevieuw;
+                                _currIndex = _currIndex == 0 ? 1 : 0;
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
+          if (profilevieuw)
+            AnimatedPositioned(
+              curve: Curves.bounceInOut,
+              duration: Duration(seconds: 200),
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.person_outline_rounded),
+                    title: const Text('Mon profile'),
+                    onTap: () async {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MonProfile(
+                                    userUnique: userUnique[0],
+                                  )));
+                      // print(user[0].name);
+                    },
+                  ),
+                  Divider(),
+                ],
+              ),
+            ),
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text("Dashboard"),
+            leading: const Icon(Icons.home),
+            title: const Text('Dashboard'),
             onTap: () {
               Navigator.push(
                   context,
@@ -149,28 +279,18 @@ class _MenuGaucheState extends State<MenuGauche> {
             },
           ),
           ListTile(
-              leading: Icon(Icons.home),
+              leading: Icon(Icons.bar_chart),
               title: Text("Nouvel enquete"),
               onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertGoSUrvey(
-                        titre: "Creer une enquete",
-                        hintText: "Entrer le nom de votre Enquete",
-                        validation: () => {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Dashboard(
-                                        RouteLink: "newEnquete",
-                                      )))
-                        },
-                      );
-                    });
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Dashboard(
+                              RouteLink: 'newEnquete',
+                            )));
               }),
           ListTile(
-            leading: Icon(Icons.home),
+            leading: Icon(Icons.bar_chart_rounded),
             title: Text("Enquetes recentes"),
             onTap: () {
               Navigator.push(
@@ -182,8 +302,8 @@ class _MenuGaucheState extends State<MenuGauche> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.favorite),
-            title: Text("Parametre de l'application"),
+            leading: const Icon(Icons.settings_outlined),
+            title: const Text('Parametres de l\'application'),
             onTap: () {
               Navigator.push(
                   context,
@@ -194,10 +314,7 @@ class _MenuGaucheState extends State<MenuGauche> {
                           )));
             },
           ),
-          Padding(
-            padding: EdgeInsets.all(14.0),
-            child: Text("Autres"),
-          ),
+          const Divider(thickness: 1),
           ListTile(
             leading: Icon(Icons.favorite),
             title: Text("Laissez un avis sur PlayStore"),
@@ -248,7 +365,7 @@ class _MenuGaucheState extends State<MenuGauche> {
             },
           ),
           ListTile(
-              leading: Icon(Icons.home),
+              leading: Icon(Icons.library_add_check),
               title: Text("Licences et librairies"),
               onTap: () {
                 showAboutDialog(
@@ -264,9 +381,31 @@ class _MenuGaucheState extends State<MenuGauche> {
                 );
               }),
           ListTile(
-            leading: Icon(Icons.bluetooth),
-            title: Text("Partager Go Survey"),
+            leading: const Icon(Icons.group),
+            title: const Text('Inviter des amis'),
             onTap: () {},
+          ),
+          ListTile(
+            leading: const Icon(Icons.info),
+            title: const Text('A propos'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => QuestionnaireCreate(
+                            title: "Creation du questionnaire",
+                          )));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Deconection'),
+            onTap: () async {
+              final prefs = await SharedPreferences.getInstance();
+              prefs.setBool('login', false);
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => LoginSignup()));
+            },
           ),
         ],
       ),
@@ -292,6 +431,102 @@ class _MenuGaucheState extends State<MenuGauche> {
   }
 }
 
+class AlertGoSurvey extends StatelessWidget {
+  const AlertGoSurvey({
+    Key? key,
+    required this.titre,
+    required this.hinText,
+    required this.prefId,
+    required this.routeLink,
+    required TextEditingController alertController,
+    required RubriqueService recensementService,
+  })  : _alertController = alertController,
+        _recensementService = recensementService,
+        super(key: key);
+  final String titre;
+  final String hinText;
+  final String prefId;
+  final String routeLink;
+  final TextEditingController _alertController;
+  final RubriqueService _recensementService;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Container(
+          width: 100,
+          height: 200,
+          child: OverflowBox(
+            maxWidth: 400,
+            minHeight: 10,
+            child: Column(
+              children: [
+                SizedBox(
+                  width: 300,
+                  height: 50,
+                  child: TextButton(
+                    child: Text(titre, style: TextStyle(color: Colors.white)),
+                    onPressed: () {},
+                  ),
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                Container(
+                  width: 250,
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: _alertController,
+                        autofocus: true,
+                        onTap: () {},
+                        onChanged: (value) {},
+                        decoration: InputDecoration(hintText: hinText),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                TextButton(
+                  onPressed: () async {
+                    if (_alertController.text != '') {
+                      var recPref = await SharedPreferences.getInstance();
+                      var recId = recPref.getInt('authId');
+                      var recensement = RubriqueModel();
+                      recensement.userId = recId;
+                      recensement.description = _alertController.text;
+                      var result =
+                          await _recensementService.saveRubrique(recensement);
+                      recPref.setInt(prefId, result);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => QuestionnaireCreate(
+                                    title: "Creation du questionnaire",
+                                  )));
+                      print(recPref.getInt(prefId));
+                    } else
+                      print('text input not null');
+                  },
+                  child: Text("Valider"),
+                  style: TextButton.styleFrom(
+                      side: BorderSide(width: 1, color: Colors.grey),
+                      minimumSize: Size(145, 40),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      primary: Colors.white,
+                      backgroundColor: Colors.green),
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
+}
+
 class DashboardBody extends StatefulWidget {
   const DashboardBody({super.key, required this.RouteLink});
   final String RouteLink;
@@ -305,16 +540,16 @@ class _DashboardBodyState extends State<DashboardBody> {
     Size size = MediaQuery.of(context).size;
     // activation du scroking dans des petites appareils
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          HeaderDashboard(size: size),
-          widget.RouteLink == "mainDashboard"
-              ? MainDashboard()
-              : widget.RouteLink == "oldEnquete"
-                  ? OldEnquete()
-                  : NewEnquete(),
-        ],
-      ),
-    );
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            HeaderDashboard(size: size),
+            widget.RouteLink == "mainDashboard"
+                ? MainDashboard()
+                : widget.RouteLink == "oldEnquete"
+                    ? OldEnquete()
+                    : NewEnquete(),
+          ],
+        ));
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:checkbox_grouped/checkbox_grouped.dart';
-import 'package:go_survey/components/question_reponseView.dart';
 import 'package:go_survey/models/dynamique_quest.dart';
 import 'package:go_survey/models/modalites/modalite.dart';
 import 'package:go_survey/models/modalites/modalite_service.dart';
@@ -160,6 +159,9 @@ class _QuestionCreateState extends State<QuestionCreate> {
                     if (_globalKey.currentState!.validate()) {
                       _globalKey.currentState!.save();
                     }
+
+                    _controller.text = "";
+                    _verticalGroupValue = "Reponse textuelle";
                   },
                   icon: Icon(
                     Icons.add_circle,
@@ -186,8 +188,9 @@ class _QuestionCreateState extends State<QuestionCreate> {
                       questionSave.userId = userId;
                       var result =
                           await questionnaireService.saveQuestion(questionSave);
-                      if (reponseTypeList[typereponse] != 0 ||
-                          reponseTypeList[typereponse] != 1) {
+                      if (reponseTypeList.length < typereponse &&
+                          (reponseTypeList[typereponse] != 0 ||
+                              reponseTypeList[typereponse] != 1)) {
                         var modaliteSave = ModaliteModel();
                       }
                       print(typereponse);

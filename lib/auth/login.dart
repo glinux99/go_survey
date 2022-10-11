@@ -354,6 +354,7 @@ class _LoginSignupState extends State<LoginSignup> {
             ),
           ),
           TextFormField(
+            keyboardType: TextInputType.emailAddress,
             controller: emailController,
             decoration: const InputDecoration(
                 labelStyle: TextStyle(color: Color.fromARGB(183, 0, 0, 0)),
@@ -374,6 +375,7 @@ class _LoginSignupState extends State<LoginSignup> {
           ),
           TextFieldContainer(
             child: TextFormField(
+              keyboardType: TextInputType.phone,
               controller: phoneController,
               decoration: const InputDecoration(
                   icon: Icon(

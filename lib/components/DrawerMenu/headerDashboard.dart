@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:go_survey/admin/dashbord.dart';
 import 'package:go_survey/auth/login.dart';
@@ -6,11 +7,6 @@ import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/oldEnqu
 import 'package:go_survey/components/DrawerMenu/user/userprofile.dart';
 import 'package:go_survey/components/bodyDashboard.dart';
 import 'package:go_survey/components/DrawerMenu/newEnquete/newsurvey.dart';
-import 'package:go_survey/components/DrawerMenu/configs/rubriques.dart';
-import 'package:go_survey/components/colors/colors.dart';
-import 'package:go_survey/models/modalites/modalite.dart';
-import 'package:go_survey/models/modalites/modalite_service.dart';
-import 'package:go_survey/models/recensements/recensement.dart';
 import 'package:go_survey/models/recensements/recensement_service.dart';
 import 'package:go_survey/models/rubriques/rubrique.dart';
 import 'package:go_survey/models/rubriques/rubrique_service.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/enquetes_recentes.dart';
 import 'package:go_survey/components/question_reponseView.dart';
-import 'package:go_survey/components/questionnaireView.dart';
+import 'package:go_survey/components/ReponsesView.dart';
 
 class QuestionnnaireList extends StatefulWidget {
   const QuestionnnaireList({super.key});

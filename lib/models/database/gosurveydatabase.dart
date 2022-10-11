@@ -76,6 +76,11 @@ FOREIGN KEY (questionId) REFERENCES questions (id))
 // ''');
 
     await db.execute('''
+CREATE TABLE reponses (id $idType, reponse $stringType, questionId $integerType, userId $integerType,
+FOREIGN KEY(questionId) REFERENCES questionnaires (id), FOREIGN KEY (userId) REFERENCES users (id)
+)
+''');
+    await db.execute('''
 CREATE TABLE configs(id $idType, 
 theme $stringType, serveur $stringType, tailleTexte INTEGER, langue INTEGER, misAjourForm INTEGER, sendAuto INTEGER, userId $integerType, FOREIGN KEY (userId) REFERENCES users (id) );
 ''');

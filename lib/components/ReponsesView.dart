@@ -12,18 +12,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/questionnaires/questionnaire_service.dart';
 
-class QuestionReponseViewView extends StatefulWidget {
+class QuestionReponseReadView extends StatefulWidget {
   final RubriqueModel questionnaires;
   final int? questIndex;
-  QuestionReponseViewView(
+  QuestionReponseReadView(
       {super.key, required this.questionnaires, this.questIndex});
   @override
-  State<QuestionReponseViewView> createState() =>
-      _QuestionReponseViewViewState();
+  State<QuestionReponseReadView> createState() =>
+      _QuestionReponseReadViewState();
 }
 
-class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
+class _QuestionReponseReadViewState extends State<QuestionReponseReadView> {
   late List<QuestionnaireModel> questionsList;
+  late List<ReponsesModel> reponseList;
   var _result;
   final _questionnaireService = QuestionnaireService();
   late final List<ReponsesModel> reponsesList;
@@ -34,11 +35,13 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
   @override
   void initState() {
     getRubriques();
+    getReponses();
     _globalKey = GlobalKey();
     reponseQuestion = {};
     reponsesList = [];
     _controller = TextEditingController();
     questionsList = <QuestionnaireModel>[];
+    reponseList = <ReponsesModel>[];
     super.initState();
   }
 
@@ -57,6 +60,22 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
       });
     });
     // print(rubriques);
+  }
+
+  getReponses() async {
+    var rubriques =
+        await reponseService.getReponsesByQuestionId(widget.questIndex! + 1);
+    setState(() {
+      rubriques.forEach((rub) {
+        var reponseModel = ReponsesModel();
+        reponseModel.id = rub['id'];
+        reponseModel.reponse = rub['reponse'].toString();
+        reponseModel.userId = rub['userId'];
+        reponseModel.questionId = rub['questionId'];
+        reponsesList.add(reponseModel);
+      });
+      // print(rubriques);
+    });
   }
 
   @override
@@ -158,57 +177,7 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
                                                 Text(questionsList[index]
                                                     .question
                                                     .toString()),
-                                                if (questionsList[index]
-                                                        .typeReponse
-                                                        .toString() ==
-                                                    "Reponse textuelle")
-                                                  TextField(
-                                                    onChanged: (newValue) {
-                                                      reponseQuestion
-                                                          .addEntries([
-                                                        MapEntry(index,
-                                                            newValue.toString())
-                                                      ]);
-                                                      print(reponseQuestion);
-                                                    },
-                                                  ),
-                                                if (questionsList[index]
-                                                        .typeReponse
-                                                        .toString() ==
-                                                    "Reponse Numerique")
-                                                  TextField(
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    onSubmitted: (newValue) {
-                                                      reponseQuestion
-                                                          .addEntries([
-                                                        MapEntry(index,
-                                                            newValue.toString())
-                                                      ]);
-                                                      print(reponseQuestion);
-                                                    },
-                                                  ),
-                                                if (questionsList[index]
-                                                        .typeReponse
-                                                        .toString() ==
-                                                    "Modalite [1. Oui, 2. Non]")
-                                                  Column(
-                                                    children: [
-                                                      // Some code
-                                                      Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 10),
-                                                          child:
-                                                              RadioButtonField([
-                                                            '1. Oui',
-                                                            '2. Non'
-                                                          ], reponseQuestion,
-                                                                  index)),
-                                                      Text(reponseQuestion
-                                                          .toString())
-                                                    ],
-                                                  ),
+                                                Text(reponseList[0].toString())
                                               ],
                                             ),
                                           ))),
@@ -223,30 +192,10 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
             child: TextButton(
                 style: ButtonStyle(),
                 onPressed: () async {
-                  var recPref = await SharedPreferences.getInstance();
-                  var userId = recPref.getInt('authId');
-                  if (questionsList.length == reponseQuestion.length) {
-                    reponseQuestion.forEach((key, value) async {
-                      var reponse = ReponsesModel();
-                      reponse.reponse = value;
-                      reponse.questionId = key + 1;
-                      reponse.userId = userId;
-                      var result = await reponseService.saveReponses(reponse);
-                      print(result);
-                    });
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => QuestionReponseReadView(
-                                  questionnaires: widget.questionnaires,
-                                  questIndex: widget.questIndex,
-                                )));
-                  } else {
-                    print('Error');
-                  }
+                  print(reponseList.toString());
                 },
                 child: Text(
-                  "Enregistrer",
+                  "Retour",
                   style: TextStyle(fontSize: 20),
                 )),
           )

@@ -42,8 +42,8 @@ class CrudOperation {
 
   readDataByContraints(table, champ, champValue) async {
     var connection = await database;
-    return await connection
-        ?.query(table, where: '$champ =?', whereArgs: [champValue]);
+    return await connection?.query(table,
+        where: '$champ =?', whereArgs: [champValue], limit: 1);
   }
 
   updateData(table, data) async {

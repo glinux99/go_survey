@@ -104,7 +104,9 @@ class _ReadReponseViewState extends State<ReadReponseView> {
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
                             ),
                           )),
                         ))
@@ -159,7 +161,7 @@ class _ReadReponseViewState extends State<ReadReponseView> {
                                                   Text('\n' +
                                                       reponsesL[index]
                                                           .reponse
-                                                          .toString())
+                                                          .toString()),
                                                 ],
                                               ),
                                             ))),
@@ -173,6 +175,7 @@ class _ReadReponseViewState extends State<ReadReponseView> {
                 child: TextButton(
                     style: ButtonStyle(),
                     onPressed: () async {
+                      Navigator.pop(context);
                       print(reponsesL[1].reponse);
                     },
                     child: Text(

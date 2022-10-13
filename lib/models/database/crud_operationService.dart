@@ -42,14 +42,26 @@ class CrudOperation {
 
   readDataByContraints(table, champ, champValue) async {
     var connection = await database;
+    return await connection
+        ?.query(table, where: '$champ =?', whereArgs: [champValue]);
+  }
+
+  readReponseByContraints(table, champ, champ2, champValue) async {
+    var connection = await database;
     return await connection?.query(table,
-        where: '$champ =?', whereArgs: [champValue], limit: 1);
+        where: '$champ =? & $champ2', whereArgs: [champValue], limit: 1);
   }
 
   updateData(table, data) async {
     var connection = await database;
     return await connection
         ?.update(table, data, where: 'id=?', whereArgs: [data['id']]);
+  }
+
+  updateDataQuery(table, champ, champValue, id) async {
+    var connection = await database;
+    return await connection?.rawUpdate(
+        'UPDATE $table SET $champ = ? WHERE id = $id', [champValue]);
   }
 
   deleteDataById(table, itemId) async {

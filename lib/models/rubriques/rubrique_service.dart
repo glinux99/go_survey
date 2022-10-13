@@ -16,6 +16,11 @@ class RubriqueService {
     return await _savedataSurvey.readData('rubriques');
   }
 
+  updateRubrique(id, champValue) async {
+    return await _savedataSurvey.updateDataQuery(
+        'rubriques', 'questCount', champValue, id);
+  }
+
   getRubriqueById(id) async {
     return await _savedataSurvey.readDataById('rubriques', id);
   }

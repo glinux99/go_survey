@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_survey/admin/dashbord.dart';
 import 'package:go_survey/components/DrawerMenu/configs/taille_config.dart';
 import 'package:go_survey/components/colors/colors.dart';
@@ -299,7 +300,8 @@ class _LoginSignupState extends State<LoginSignup> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         socialButton(Icons.facebook, "Facebook", kFacebook),
-                        socialButton(Icons.plus_one, "Google", kGoogle)
+                        socialButton(
+                            FontAwesomeIcons.googlePlus, "Google", kGoogle)
                       ],
                     ),
                   )
@@ -338,8 +340,13 @@ class _LoginSignupState extends State<LoginSignup> {
         children: [
           TextFieldContainer(
             child: TextFormField(
+              style: TextStyle(color: Colors.black),
               controller: nameController,
               decoration: const InputDecoration(
+                  labelStyle: TextStyle(color: Color.fromARGB(183, 0, 0, 0)),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black38),
+                  ),
                   icon: Icon(
                     Icons.person,
                     color: kGreen,
@@ -354,10 +361,14 @@ class _LoginSignupState extends State<LoginSignup> {
             ),
           ),
           TextFormField(
+            style: TextStyle(color: Colors.black),
             keyboardType: TextInputType.emailAddress,
             controller: emailController,
             decoration: const InputDecoration(
                 labelStyle: TextStyle(color: Color.fromARGB(183, 0, 0, 0)),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black38),
+                ),
                 icon: Icon(
                   Icons.email_sharp,
                   color: kGreen,
@@ -375,9 +386,14 @@ class _LoginSignupState extends State<LoginSignup> {
           ),
           TextFieldContainer(
             child: TextFormField(
+              style: TextStyle(color: Colors.black),
               keyboardType: TextInputType.phone,
               controller: phoneController,
               decoration: const InputDecoration(
+                  labelStyle: TextStyle(color: Color.fromARGB(183, 0, 0, 0)),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black38),
+                  ),
                   icon: Icon(
                     Icons.phone_in_talk,
                     color: kGreen,
@@ -387,6 +403,7 @@ class _LoginSignupState extends State<LoginSignup> {
           ),
           TextFieldContainer(
               child: TextFormField(
+            style: TextStyle(color: Colors.black),
             controller: passwordController,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -403,8 +420,12 @@ class _LoginSignupState extends State<LoginSignup> {
             enableSuggestions: false,
             autocorrect: false,
             decoration: const InputDecoration(
+              hintStyle: TextStyle(color: Color.fromARGB(183, 0, 0, 0)),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black38),
+              ),
               icon: Icon(
-                Icons.local_activity,
+                FontAwesomeIcons.lock,
                 color: kGreen,
               ),
               hintText: '*****************',
@@ -421,9 +442,13 @@ class _LoginSignupState extends State<LoginSignup> {
       child: Column(
         children: [
           TextFormField(
+            style: TextStyle(color: Colors.black),
             controller: emailController,
             decoration: const InputDecoration(
                 labelStyle: TextStyle(color: Color.fromARGB(183, 0, 0, 0)),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black38),
+                ),
                 icon: Icon(
                   Icons.email_sharp,
                   color: kGreen,
@@ -441,6 +466,7 @@ class _LoginSignupState extends State<LoginSignup> {
           ),
           TextFieldContainer(
               child: TextFormField(
+            style: TextStyle(color: Colors.black),
             controller: passwordController,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -457,8 +483,12 @@ class _LoginSignupState extends State<LoginSignup> {
             enableSuggestions: false,
             autocorrect: false,
             decoration: const InputDecoration(
+              hintStyle: TextStyle(color: Color.fromARGB(183, 0, 0, 0)),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black38),
+              ),
               icon: Icon(
-                Icons.local_activity,
+                FontAwesomeIcons.lock,
                 color: kGreen,
               ),
               hintText: '*****************',
@@ -472,6 +502,13 @@ class _LoginSignupState extends State<LoginSignup> {
                   Row(
                     children: [
                       Checkbox(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(2.0),
+                          ),
+                          side: MaterialStateBorderSide.resolveWith(
+                            (states) =>
+                                BorderSide(width: 1.0, color: Colors.black12),
+                          ),
                           activeColor: kGreen,
                           value: souvenir,
                           onChanged: (value) {

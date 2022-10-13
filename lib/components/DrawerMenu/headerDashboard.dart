@@ -1,4 +1,5 @@
 // ignore: file_names
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:go_survey/admin/dashbord.dart';
 import 'package:go_survey/auth/login.dart';
@@ -7,6 +8,7 @@ import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/oldEnqu
 import 'package:go_survey/components/DrawerMenu/user/userprofile.dart';
 import 'package:go_survey/components/bodyDashboard.dart';
 import 'package:go_survey/components/DrawerMenu/newEnquete/newsurvey.dart';
+import 'package:go_survey/components/colors/colors.dart';
 import 'package:go_survey/models/recensements/recensement_service.dart';
 import 'package:go_survey/models/rubriques/rubrique.dart';
 import 'package:go_survey/models/rubriques/rubrique_service.dart';
@@ -15,6 +17,8 @@ import 'package:go_survey/models/users/user_service.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../save.dart';
 
 class HeaderDashboard extends StatefulWidget {
   const HeaderDashboard({
@@ -28,7 +32,23 @@ class HeaderDashboard extends StatefulWidget {
   State<HeaderDashboard> createState() => _HeaderDashboardState();
 }
 
+bool isdark = false;
+
 class _HeaderDashboardState extends State<HeaderDashboard> {
+  late SharedPreferences prefs;
+
+  Future<bool> loadPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    isdark = prefs.getBool('isDark')!;
+    return isdark;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadPrefs();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,7 +64,7 @@ class _HeaderDashboardState extends State<HeaderDashboard> {
             ),
             height: widget.size.height * .2 - 27,
             decoration: BoxDecoration(
-                color: Colors.green,
+                color: isdark ? Colors.green : Color.fromARGB(255, 22, 36, 22),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(36),
                   bottomRight: Radius.circular(36),
@@ -112,7 +132,6 @@ bool iconBinary = false;
 IconData _themeLightIcon = Icons.wb_sunny;
 IconData _themeDarkIcon = Icons.nights_stay;
 ThemeData _themeDark = ThemeData(
-  primarySwatch: Colors.red,
   brightness: Brightness.dark,
 );
 ThemeData _themeLight =
@@ -122,6 +141,7 @@ class _MenuGaucheState extends State<MenuGauche> {
   bool profilevieuw = false;
   var _alertController = TextEditingController();
   int _currIndex = 1;
+  int _currIndex2 = 1;
   var _userService = UserService();
   var _recensementService = RecensementService();
   var user;
@@ -160,19 +180,69 @@ class _MenuGaucheState extends State<MenuGauche> {
         children: [
           DrawerHeader(
             decoration: const BoxDecoration(
-              color: Colors.green,
+              color: kGreen,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: CircleAvatar(
-                    backgroundColor: Colors.green,
-                    foregroundImage: AssetImage("assets/img/1.jpg"),
-                    child: Text(
-                      'user',
-                    ),
-                    radius: 34,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.green,
+                        foregroundImage: AssetImage("assets/img/1.jpg"),
+                        child: Text(
+                          'user',
+                        ),
+                        radius: 34,
+                      ),
+                      ThemeSwitcher(
+                        builder: (context) {
+                          return IconButton(
+                            onPressed: () async {
+                              var prefs = await SharedPreferences.getInstance();
+                              prefs.setBool(
+                                  'isDark', !prefs.getBool('isDark')!);
+                              isdark = prefs.getBool('isDark')!;
+                              ThemeSwitcher.of(context).changeTheme(
+                                theme: ThemeModelInheritedNotifier.of(context)
+                                            .theme
+                                            .brightness ==
+                                        Brightness.light
+                                    ? darkBlueTheme
+                                    : lightTheme,
+                              );
+                              setState(() {
+                                _currIndex2 = _currIndex2 == 0 ? 1 : 0;
+                              });
+                            },
+                            icon: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 600),
+                                transitionBuilder: (child, anim) =>
+                                    RotationTransition(
+                                      turns: child.key == ValueKey('icon11')
+                                          ? Tween<double>(begin: 1, end: 0.5)
+                                              .animate(anim)
+                                          : Tween<double>(begin: 0.5, end: 1)
+                                              .animate(anim),
+                                      child: FadeTransition(
+                                          opacity: anim, child: child),
+                                    ),
+                                child: _currIndex2 == 0
+                                    ? Icon(Icons.light_mode_rounded,
+                                        color: Colors.white,
+                                        key: const ValueKey('icon11'))
+                                    : Icon(
+                                        Icons.dark_mode_rounded,
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                        key: const ValueKey('icon22'),
+                                      )),
+                            // const Icon(Icons.brightness_3, size: 25),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
                 GestureDetector(
@@ -494,6 +564,7 @@ class AlertGoSurvey extends StatelessWidget {
                       var recensement = RubriqueModel();
                       recensement.userId = recId;
                       recensement.description = _alertController.text;
+                      recensement.questCount = 0;
                       var result =
                           await _recensementService.saveRubrique(recensement);
                       recPref.setInt(prefId, result);

@@ -11,9 +11,17 @@ class ReponseService {
         "reponses", user.reponseQuestionMap());
   }
 
-  getReponsesByQuestionId(questionId) async {
+  getById() async {
+    return await _savedataUser.readDataById('reponses', 1);
+  }
+
+  getReponsesByRubriqueId(rubriqueId) async {
     return await _savedataUser.readDataByContraints(
-        'reponses', 'questionId', questionId);
+        'reponses', 'rubriqueId', rubriqueId);
+  }
+
+  getAllReponse() async {
+    return await _savedataUser.readData('reponses');
   }
 
   getReponseById(id) async {

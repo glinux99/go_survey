@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/reponse_view.dart';
-import 'package:go_survey/components/DrawerMenu/test.dart';
 import 'package:go_survey/components/ReponsesView.dart';
-import 'package:go_survey/components/colors/colors.dart';
 import 'package:go_survey/models/questionnaires/questionnaire.dart';
 import 'package:go_survey/models/reponses/reponse_service.dart';
 import 'package:go_survey/models/reponses/reponses.dart';
@@ -56,7 +53,6 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
         questionsList.add(rubriqueModel);
       });
     });
-    // print(rubriques);
   }
 
   @override
@@ -104,7 +100,9 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
                         ),
                       )),
                     ))
@@ -179,7 +177,7 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
                                                   TextField(
                                                     keyboardType:
                                                         TextInputType.number,
-                                                    onSubmitted: (newValue) {
+                                                    onChanged: (newValue) {
                                                       reponseQuestion
                                                           .addEntries([
                                                         MapEntry(index,
@@ -225,23 +223,33 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
                 onPressed: () async {
                   var recPref = await SharedPreferences.getInstance();
                   var userId = recPref.getInt('authId');
+
+                  int cle = 0;
                   if (questionsList.length == reponseQuestion.length) {
-                    reponseQuestion.forEach((key, value) async {
-                      var reponse = ReponsesModel();
-                      reponse.reponse = value;
-                      reponse.questionId = key + 1;
-                      reponse.userId = userId;
-                      var result = await reponseService.saveReponses(reponse);
-                      print(result);
+                    setState(() {
+                      cle++;
+                      reponseQuestion.forEach((key, value) async {
+                        var reponse = ReponsesModel();
+                        reponse.reponse = value;
+                        reponse.questionId = cle;
+                        reponse.rubriqueId = widget.questIndex! + 1;
+                        reponse.userId = userId;
+                        var result = await reponseService.saveReponses(reponse);
+                        print(reponseQuestion);
+                        print(cle);
+                      });
                     });
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => QuestionReponseReadView(
-                                  questionnaires: widget.questionnaires,
-                                  questIndex: widget.questIndex,
-                                )));
+                    print(questionsList.length);
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => ReadReponseView(
+                    //               rubriqueName: widget.questionnaires,
+                    //               rubriqueId: widget.questIndex,
+                    //             )));
                   } else {
+                    print(questionsList.length);
+                    print(reponseQuestion);
                     print('Error');
                   }
                 },

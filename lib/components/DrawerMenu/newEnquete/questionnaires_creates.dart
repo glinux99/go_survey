@@ -5,6 +5,8 @@ import 'package:go_survey/models/modalites/modalite.dart';
 import 'package:go_survey/models/modalites/modalite_service.dart';
 import 'package:go_survey/models/questionnaires/questionnaire.dart';
 import 'package:go_survey/models/questionnaires/questionnaire_service.dart';
+import 'package:go_survey/models/rubriques/rubrique.dart';
+import 'package:go_survey/models/rubriques/rubrique_service.dart';
 import 'package:go_survey/providers/list_provider.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:provider/provider.dart';
@@ -186,8 +188,11 @@ class _QuestionCreateState extends State<QuestionCreate> {
                       questionSave.rubriqueId = rubriqueId;
                       typereponse++;
                       questionSave.userId = userId;
-                      var result =
-                          await questionnaireService.saveQuestion(questionSave);
+                      await questionnaireService.saveQuestion(questionSave);
+                      var rub = RubriqueService();
+                      var rubriques = await await rub.updateRubrique(
+                          rubriqueId, typereponse);
+
                       if (reponseTypeList.length < typereponse &&
                           (reponseTypeList[typereponse] != 0 ||
                               reponseTypeList[typereponse] != 1)) {

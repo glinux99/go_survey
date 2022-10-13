@@ -33,6 +33,7 @@ class _NewEnqueteState extends State<NewEnquete> {
         var rubriqueModel = RubriqueModel();
         rubriqueModel.id = rub['id'];
         rubriqueModel.description = rub['description'];
+        rubriqueModel.questCount = rub['questCount'];
         rubriquesList.add(rubriqueModel);
       });
     });
@@ -81,7 +82,7 @@ class _NewEnqueteState extends State<NewEnquete> {
                           child: EnqueteWidget(
                             img: "assets/img/2.png",
                             titre: rubriquesList[index - 1].description ?? '',
-                            CountQ: 12,
+                            CountQ: rubriquesList[index - 1].questCount,
                           ),
                         );
                       }),

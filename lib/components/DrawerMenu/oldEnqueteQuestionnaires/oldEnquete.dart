@@ -47,15 +47,15 @@ class _OldEnqueteState extends State<OldEnquete> {
             child: Expanded(
               child: GridView.builder(
                 scrollDirection: Axis.vertical,
-                reverse: true,
+                reverse: false,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     mainAxisSpacing: 0, crossAxisCount: 2),
                 shrinkWrap: true,
                 itemCount: rubriquesList.length,
                 itemBuilder: (BuildContext context, int index) => EnqueteWidget(
                   img: "assets/img/2.png",
+                  CountQ: rubriquesList[index].questCount ?? 0,
                   titre: rubriquesList[index].description ?? '',
-                  CountQ: 12,
                 ),
               ),
             ),

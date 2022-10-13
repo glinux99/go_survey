@@ -32,6 +32,7 @@ class _MainDashboardState extends State<MainDashboard> {
         var rubriqueModel = RubriqueModel();
         rubriqueModel.id = rub['id'];
         rubriqueModel.description = rub['description'];
+        rubriqueModel.questCount = rub['questCount'];
         rubriquesList.add(rubriqueModel);
       });
     });
@@ -43,7 +44,7 @@ class _MainDashboardState extends State<MainDashboard> {
       return Center(
         child: Text("Aucune donnee"),
       );
-    } else
+    } else {
       return Column(
         children: [
           SizedBox(
@@ -57,7 +58,7 @@ class _MainDashboardState extends State<MainDashboard> {
               itemBuilder: (BuildContext context, int index) => EnqueteWidget(
                 img: "assets/img/2.png",
                 titre: rubriquesList[index].description ?? '',
-                CountQ: 12,
+                CountQ: rubriquesList[index].questCount!,
               ),
             ),
           ),
@@ -91,5 +92,6 @@ class _MainDashboardState extends State<MainDashboard> {
           ),
         ],
       );
+    }
   }
 }

@@ -32,7 +32,7 @@ class GoSruveyDataBase {
     // create table of rubrik of the survey
     await db.execute('''
 CREATE TABLE rubriques(id $idType, 
-description $stringType, userId $integerType, FOREIGN KEY (userId) REFERENCES users (id) );
+description $stringType,questCount $integerType, userId $integerType, FOREIGN KEY (userId) REFERENCES users (id) );
 ''');
 // Create table of recensement description
 
@@ -55,7 +55,18 @@ FOREIGN KEY (rubriqueId) REFERENCES rubriques (id),
 FOREIGN KEY (userId) REFERENCES users (id)
  );
 ''');
-
+    await db.execute('''
+CREATE TABLE reponses (
+  id $idType,
+reponse $textType,
+questionId $integerType,
+rubriqueId $integerType,
+userId $integerType,
+FOREIGN KEY (rubriqueId) REFERENCES rubriques (id),
+FOREIGN KEY (questionId) REFERENCES questionnaires (id),
+FOREIGN KEY (userId) REFERENCES users (id)
+)
+''');
 // Modalite table
 
     await db.execute('''
@@ -75,11 +86,6 @@ FOREIGN KEY (questionId) REFERENCES questions (id))
 // )
 // ''');
 
-    await db.execute('''
-CREATE TABLE reponses (id $idType, reponse $stringType, questionId $integerType, userId $integerType,
-FOREIGN KEY(questionId) REFERENCES questionnaires (id), FOREIGN KEY (userId) REFERENCES users (id)
-)
-''');
     await db.execute('''
 CREATE TABLE configs(id $idType, 
 theme $stringType, serveur $stringType, tailleTexte INTEGER, langue INTEGER, misAjourForm INTEGER, sendAuto INTEGER, userId $integerType, FOREIGN KEY (userId) REFERENCES users (id) );

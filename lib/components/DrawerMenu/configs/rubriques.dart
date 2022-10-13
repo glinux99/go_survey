@@ -12,7 +12,7 @@ class EnqueteWidget extends StatefulWidget {
     required this.titre,
   });
   final String img, titre;
-  final int CountQ;
+  final int? CountQ;
   @override
   State<EnqueteWidget> createState() => _EnqueteWidgetState();
 }

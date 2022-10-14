@@ -4,6 +4,7 @@ class ReponsesModel {
   int? questionId;
   int? rubriqueId;
   int? userId;
+
   reponseQuestionMap() {
     var mapping = Map<String, dynamic>();
     mapping['id'] = id ?? null;

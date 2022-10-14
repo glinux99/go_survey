@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:go_survey/admin/dashbord.dart';
 import 'package:go_survey/auth/login.dart';
 import 'package:go_survey/components/screen/introduction_screen.dart';
-import 'package:go_survey/pp.dart';
 import 'package:go_survey/save.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,7 +13,6 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   logPref = prefs.getBool('login') ?? false;
   show = prefs.getBool("go_survey") ?? true;
-  WidgetsFlutterBinding.ensureInitialized();
   final themeService = await ThemeService.instance;
   var initTheme = themeService.initial;
   runApp(const MyApp());

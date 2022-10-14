@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/dataOutPut.dart';
 import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/questionnaire_list.dart';
 import 'package:go_survey/components/DrawerMenu/configs/rubriques.dart';
 import 'package:go_survey/models/rubriques/rubrique.dart';
@@ -52,10 +53,21 @@ class _OldEnqueteState extends State<OldEnquete> {
                     mainAxisSpacing: 0, crossAxisCount: 2),
                 shrinkWrap: true,
                 itemCount: rubriquesList.length,
-                itemBuilder: (BuildContext context, int index) => EnqueteWidget(
-                  img: "assets/img/2.png",
-                  CountQ: rubriquesList[index].questCount ?? 0,
-                  titre: rubriquesList[index].description ?? '',
+                itemBuilder: (BuildContext context, int index) =>
+                    GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DataOutPut(
+                                  rubriqueId: index,
+                                )));
+                  },
+                  child: EnqueteWidget(
+                    img: "assets/img/2.png",
+                    CountQ: rubriquesList[index].questCount ?? 0,
+                    titre: rubriquesList[index].description ?? '',
+                  ),
                 ),
               ),
             ),

@@ -14,6 +14,10 @@ class UserService {
     return await _savedataUser.readDataLogin('users', email, password);
   }
 
+  update(User data) async {
+    return await _savedataUser.updateData('users', data.userMap());
+  }
+
   getUserById(id) async {
     return await _savedataUser.readDataById('users', id);
   }

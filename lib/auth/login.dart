@@ -190,8 +190,9 @@ class _LoginSignupState extends State<LoginSignup> {
                             var result = await _userService.saveUser(user);
                             logPref.setBool('login', true);
                             result = await _userService.loginUser(
-                                user.email, user.password);
+                                emailController.text, passwordController.text);
                             var userId;
+                            print(result);
                             // for (var entry in result[0].entries) {
                             //   if (entry.key == 'id') userId = entry.value;
                             //   if (entry.key == 'name')
@@ -206,7 +207,8 @@ class _LoginSignupState extends State<LoginSignup> {
                                   userModel.id = userUnik['id'];
                                   userModel.name = userUnik['name'];
                                   userModel.email = userUnik['email'];
-                                  userModel.phone = userUnik['phone'];
+                                  userModel.phone =
+                                      userUnik['phone'].toString();
                                   userModel.password = userUnik['password'];
                                   userAuth.add(userModel);
                                   userId = userAuth[0].id;
@@ -225,22 +227,31 @@ class _LoginSignupState extends State<LoginSignup> {
                                     builder: (context) => const Dashboard(
                                           RouteLink: "mainDashboard",
                                         )));
-                            print(result);
+                            // print(result);
                           }
                           if (!connecter) {
                             var result = await _userService.loginUser(
-                                user.email, user.password);
+                                emailController.text, passwordController.text);
 
-                            print(result);
+                            print(emailController.text);
+                            print(passwordController.text);
                             if (result.isEmpty != true) {
                               var userId;
+                              // some things error
                               print('login is okay');
                               for (var entry in result[0].entries) {
                                 if (entry.key == 'id') userId = entry.value;
                                 if (entry.key == 'name')
                                   logPref.setString('userName', entry.value);
                                 if (entry.key == 'phone')
-                                  logPref.setString('userPhone', entry.value);
+                                  logPref.setString(
+                                      'userPhone', entry.value.toString());
+                                if (entry.key == 'password')
+                                  logPref.setString(
+                                      'userPassword', entry.value.toString());
+                                if (entry.key == 'email')
+                                  logPref.setString(
+                                      'userEmail', entry.value.toString());
                               }
                               logPref.setInt('authId', userId);
                               print(userId);
@@ -263,6 +274,9 @@ class _LoginSignupState extends State<LoginSignup> {
                                 fontSize: 16.0,
                               );
                               print('login is failled');
+                              print(user.email);
+                              print(user.password);
+                              print(userAuth);
                             }
                           }
                         }

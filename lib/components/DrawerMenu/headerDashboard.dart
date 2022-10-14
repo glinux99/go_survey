@@ -39,6 +39,8 @@ class _HeaderDashboardState extends State<HeaderDashboard> {
 
   Future<bool> loadPrefs() async {
     prefs = await SharedPreferences.getInstance();
+    // view this today for configures preferencies please
+    prefs.setBool('isDark', false);
     isdark = prefs.getBool('isDark')!;
     return isdark;
   }
@@ -159,8 +161,8 @@ class _MenuGaucheState extends State<MenuGauche> {
         userModel.id = userUnik['id'];
         userModel.name = userUnik['name'];
         userModel.email = userUnik['email'];
-        userModel.phone = userUnik['phone'];
-        userModel.password = userUnik['password'];
+        userModel.phone = userUnik['phone'].toString();
+        userModel.password = userUnik['password'].toString();
         userUnique.add(userModel);
       });
     });

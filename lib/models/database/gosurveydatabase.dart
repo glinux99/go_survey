@@ -26,7 +26,7 @@ class GoSruveyDataBase {
     // ON UPDATE SET NULL, ON DELETE SET NULL or set default, restrict, no action, cascade
     // Create table users for users of applications in  the mobile phone
     String sql =
-        "CREATE TABLE users (id INTEGER PRIMARY KEY,name TEXT,email Text,phone TEXT, password TEXT);";
+        "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,email TEXT,phone TEXT, password TEXT);";
     await db.execute(sql);
 
     // create table of rubrik of the survey

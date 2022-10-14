@@ -34,10 +34,11 @@ class CrudOperation {
 
   readDataLogin(table, emailUser, passwordUser) async {
     var connection = await database;
-    return await connection?.query(table,
-        where: 'email=? AND password=?',
-        whereArgs: [emailUser, passwordUser],
-        limit: 1);
+    return await connection?.query(
+      table,
+      where: 'email=? AND password=?',
+      whereArgs: [emailUser, passwordUser],
+    );
   }
 
   readDataByContraints(table, champ, champValue) async {

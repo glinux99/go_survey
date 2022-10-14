@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_survey/components/DrawerMenu/user/alteruserprofile.dart';
 import 'package:go_survey/models/users/user.dart';
 import 'package:go_survey/models/users/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,12 +49,23 @@ class _MonProfileState extends State<MonProfile> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SocialIcon(Icons.bar_chart),
+            SocialIcon(Icons.bar_chart, () {}),
             SizedBox(
               width: 12,
             ),
-            SocialIcon(Icons.circle_notifications),
+            SocialIcon(Icons.circle_notifications, () {}),
             SizedBox(
+              width: 12,
+            ),
+            SocialIcon(Icons.mode_edit, () async {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProfileEdit(
+                            userUnique: widget.userUnique,
+                          )));
+            }),
+            const SizedBox(
               width: 12,
             ),
           ],
@@ -100,14 +112,14 @@ class _MonProfileState extends State<MonProfile> {
         ]);
   }
 
-  Widget SocialIcon(IconData icon) => CircleAvatar(
+  Widget SocialIcon(IconData icon, ontap) => CircleAvatar(
         radius: 25,
         child: Material(
           shape: CircleBorder(),
           clipBehavior: Clip.hardEdge,
           color: Colors.transparent,
           child: InkWell(
-            onTap: () {},
+            onTap: ontap,
             child: Center(
                 child: Icon(
               icon,

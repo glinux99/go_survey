@@ -60,11 +60,6 @@ class _HeaderDashboardState extends State<HeaderDashboard> {
       child: Stack(
         children: [
           Container(
-            padding: EdgeInsets.only(
-              left: 15,
-              right: 15,
-              bottom: 36 + 15,
-            ),
             height: widget.size.height * .2,
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.secondary,
@@ -72,18 +67,26 @@ class _HeaderDashboardState extends State<HeaderDashboard> {
                   bottomLeft: Radius.circular(36),
                   bottomRight: Radius.circular(36),
                 )),
-            child: Row(
-              children: [
-                Text(
-                  "Go SURVEY",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-                Spacer(),
-                Image.asset("assets/img/ico.png")
-              ],
+            child: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "Go SURVEY",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    foregroundImage: AssetImage(
+                      "assets/img/ico.png",
+                    ),
+                    radius: 80,
+                  ),
+                ],
+              ),
             ),
           ),
           Positioned(

@@ -3,6 +3,7 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:go_survey/admin/dashbord.dart';
 import 'package:go_survey/auth/login.dart';
+import 'package:go_survey/components/DrawerMenu/apropos.dart';
 import 'package:go_survey/components/DrawerMenu/newEnquete/questionnaires_creates.dart';
 import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/oldEnquete.dart';
 import 'package:go_survey/components/DrawerMenu/user/userprofile.dart';
@@ -55,7 +56,7 @@ class _HeaderDashboardState extends State<HeaderDashboard> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 15 * 2.5),
-      height: widget.size.height * .2,
+      height: widget.size.height * .14,
       child: Stack(
         children: [
           Container(
@@ -64,9 +65,9 @@ class _HeaderDashboardState extends State<HeaderDashboard> {
               right: 15,
               bottom: 36 + 15,
             ),
-            height: widget.size.height * .2 - 27,
+            height: widget.size.height * .2,
             decoration: BoxDecoration(
-                color: isdark ? Colors.green : Color.fromARGB(255, 22, 36, 22),
+                color: Theme.of(context).colorScheme.secondary,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(36),
                   bottomRight: Radius.circular(36),
@@ -93,7 +94,7 @@ class _HeaderDashboardState extends State<HeaderDashboard> {
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(horizontal: 15),
               margin: EdgeInsets.symmetric(horizontal: 15),
-              height: 54,
+              height: 48,
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
@@ -106,7 +107,8 @@ class _HeaderDashboardState extends State<HeaderDashboard> {
               child: TextField(
                 onChanged: (value) {},
                 decoration: InputDecoration(
-                    hintText: "Rechercher",
+                    hintText: "Rechercher...",
+                    iconColor: Colors.green,
                     hintStyle: TextStyle(
                       color: Colors.green.withOpacity(.5),
                     ),
@@ -457,12 +459,8 @@ class _MenuGaucheState extends State<MenuGauche> {
             leading: const Icon(Icons.info),
             title: const Text('A propos'),
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => QuestionnaireCreate(
-                            title: "Creation du questionnaire",
-                          )));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AproposGoSurvey()));
             },
           ),
           ListTile(

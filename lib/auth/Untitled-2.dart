@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_survey/admin/dashbord.dart';
 import 'package:go_survey/components/DrawerMenu/configs/taille_config.dart';
 import 'package:go_survey/components/colors/colors.dart';
@@ -8,7 +7,6 @@ import 'package:go_survey/main.dart';
 import 'package:go_survey/models/users/user.dart';
 import 'package:go_survey/models/users/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class LoginSignup extends StatefulWidget {
   const LoginSignup({super.key});
@@ -191,9 +189,8 @@ class _LoginSignupState extends State<LoginSignup> {
                             var result = await _userService.saveUser(user);
                             logPref.setBool('login', true);
                             result = await _userService.loginUser(
-                                emailController.text, passwordController.text);
+                                user.email, user.password);
                             var userId;
-                            print(result);
                             // for (var entry in result[0].entries) {
                             //   if (entry.key == 'id') userId = entry.value;
                             //   if (entry.key == 'name')
@@ -208,8 +205,7 @@ class _LoginSignupState extends State<LoginSignup> {
                                   userModel.id = userUnik['id'];
                                   userModel.name = userUnik['name'];
                                   userModel.email = userUnik['email'];
-                                  userModel.phone =
-                                      userUnik['phone'].toString();
+                                  userModel.phone = userUnik['phone']!;
                                   userModel.password = userUnik['password'];
                                   userAuth.add(userModel);
                                   userId = userAuth[0].id;
@@ -228,17 +224,15 @@ class _LoginSignupState extends State<LoginSignup> {
                                     builder: (context) => const Dashboard(
                                           RouteLink: "mainDashboard",
                                         )));
-                            // print(result);
+                            print(result);
                           }
                           if (!connecter) {
                             var result = await _userService.loginUser(
-                                emailController.text, passwordController.text);
+                                user.email, user.password);
 
-                            print(emailController.text);
-                            print(passwordController.text);
+                            print(result);
                             if (result.isEmpty != true) {
                               var userId;
-                              // some things error
                               print('login is okay');
                               for (var entry in result[0].entries) {
                                 if (entry.key == 'id') userId = entry.value;
@@ -247,12 +241,6 @@ class _LoginSignupState extends State<LoginSignup> {
                                 if (entry.key == 'phone')
                                   logPref.setString(
                                       'userPhone', entry.value.toString());
-                                if (entry.key == 'password')
-                                  logPref.setString(
-                                      'userPassword', entry.value.toString());
-                                if (entry.key == 'email')
-                                  logPref.setString(
-                                      'userEmail', entry.value.toString());
                               }
                               logPref.setInt('authId', userId);
                               print(userId);
@@ -275,9 +263,6 @@ class _LoginSignupState extends State<LoginSignup> {
                                 fontSize: 16.0,
                               );
                               print('login is failled');
-                              print(user.email);
-                              print(user.password);
-                              print(userAuth);
                             }
                           }
                         }
@@ -314,10 +299,8 @@ class _LoginSignupState extends State<LoginSignup> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        socialButton(Icons.facebook, "Facebook", kFacebook,
-                            'https://www.facebook.com'),
-                        socialButton(FontAwesomeIcons.googlePlus, "Google",
-                            kGoogle, 'https://www.gmail.com')
+                        socialButton(Icons.facebook, "Facebook", kFacebook),
+                        socialButton(Icons.plus_one, "Google", kGoogle)
                       ],
                     ),
                   )
@@ -328,15 +311,9 @@ class _LoginSignupState extends State<LoginSignup> {
     );
   }
 
-  TextButton socialButton(IconData icon, String titre, Color bg, String link) {
+  TextButton socialButton(IconData icon, String titre, Color bg) {
     return TextButton(
-        onPressed: () async {
-          final url = Uri.parse(link);
-          if (await canLaunchUrl(url)) {
-            // await launchUrl(url);
-            await launchUrl(url, mode: LaunchMode.externalApplication);
-          }
-        },
+        onPressed: () {},
         style: TextButton.styleFrom(
             side: const BorderSide(width: 1, color: kGrey),
             minimumSize: const Size(145, 40),
@@ -362,13 +339,8 @@ class _LoginSignupState extends State<LoginSignup> {
         children: [
           TextFieldContainer(
             child: TextFormField(
-              style: TextStyle(color: Colors.black),
               controller: nameController,
               decoration: const InputDecoration(
-                  labelStyle: TextStyle(color: Color.fromARGB(183, 0, 0, 0)),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black38),
-                  ),
                   icon: Icon(
                     Icons.person,
                     color: kGreen,
@@ -383,14 +355,9 @@ class _LoginSignupState extends State<LoginSignup> {
             ),
           ),
           TextFormField(
-            style: TextStyle(color: Colors.black),
-            keyboardType: TextInputType.emailAddress,
             controller: emailController,
             decoration: const InputDecoration(
                 labelStyle: TextStyle(color: Color.fromARGB(183, 0, 0, 0)),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black38),
-                ),
                 icon: Icon(
                   Icons.email_sharp,
                   color: kGreen,
@@ -408,14 +375,8 @@ class _LoginSignupState extends State<LoginSignup> {
           ),
           TextFieldContainer(
             child: TextFormField(
-              style: TextStyle(color: Colors.black),
-              keyboardType: TextInputType.phone,
               controller: phoneController,
               decoration: const InputDecoration(
-                  labelStyle: TextStyle(color: Color.fromARGB(183, 0, 0, 0)),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black38),
-                  ),
                   icon: Icon(
                     Icons.phone_in_talk,
                     color: kGreen,
@@ -425,7 +386,6 @@ class _LoginSignupState extends State<LoginSignup> {
           ),
           TextFieldContainer(
               child: TextFormField(
-            style: TextStyle(color: Colors.black),
             controller: passwordController,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -442,12 +402,8 @@ class _LoginSignupState extends State<LoginSignup> {
             enableSuggestions: false,
             autocorrect: false,
             decoration: const InputDecoration(
-              hintStyle: TextStyle(color: Color.fromARGB(183, 0, 0, 0)),
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black38),
-              ),
               icon: Icon(
-                FontAwesomeIcons.lock,
+                Icons.local_activity,
                 color: kGreen,
               ),
               hintText: '*****************',
@@ -464,13 +420,9 @@ class _LoginSignupState extends State<LoginSignup> {
       child: Column(
         children: [
           TextFormField(
-            style: TextStyle(color: Colors.black),
             controller: emailController,
             decoration: const InputDecoration(
                 labelStyle: TextStyle(color: Color.fromARGB(183, 0, 0, 0)),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black38),
-                ),
                 icon: Icon(
                   Icons.email_sharp,
                   color: kGreen,
@@ -488,7 +440,6 @@ class _LoginSignupState extends State<LoginSignup> {
           ),
           TextFieldContainer(
               child: TextFormField(
-            style: TextStyle(color: Colors.black),
             controller: passwordController,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -505,12 +456,8 @@ class _LoginSignupState extends State<LoginSignup> {
             enableSuggestions: false,
             autocorrect: false,
             decoration: const InputDecoration(
-              hintStyle: TextStyle(color: Color.fromARGB(183, 0, 0, 0)),
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black38),
-              ),
               icon: Icon(
-                FontAwesomeIcons.lock,
+                Icons.local_activity,
                 color: kGreen,
               ),
               hintText: '*****************',
@@ -524,13 +471,6 @@ class _LoginSignupState extends State<LoginSignup> {
                   Row(
                     children: [
                       Checkbox(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(2.0),
-                          ),
-                          side: MaterialStateBorderSide.resolveWith(
-                            (states) =>
-                                BorderSide(width: 1.0, color: Colors.black12),
-                          ),
                           activeColor: kGreen,
                           value: souvenir,
                           onChanged: (value) {

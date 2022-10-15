@@ -1,9 +1,11 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:go_survey/admin/dashbord.dart';
 import 'package:go_survey/auth/login.dart';
 import 'package:go_survey/components/screen/introduction_screen.dart';
 import 'package:go_survey/save.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool show = true, logPref = false;
@@ -12,7 +14,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   logPref = prefs.getBool('login') ?? false;
-  show = prefs.getBool("go_survey") ?? true;
+  show = prefs.getBool("go_surveys") ?? true;
   final themeService = await ThemeService.instance;
   var initTheme = themeService.initial;
   runApp(const MyApp());
@@ -80,23 +82,48 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final isPlatformDark =
         WidgetsBinding.instance!.window.platformBrightness == Brightness.dark;
+
+    Color animated = isPlatformDark ? Colors.black : Colors.green;
     final initTheme = isPlatformDark ? darkTheme : lightTheme;
     return ThemeProvider(
       initTheme: initTheme,
       builder: (_, myTheme) {
         return MaterialApp(
-          title: 'Flutter Demo',
-          theme: myTheme,
-          debugShowCheckedModeBanner: false,
-          home: show
-              ? AcceuilScreen()
-              : logPref
-                  ? Dashboard(
-                      RouteLink: "mainDashboard",
-                    )
-                  : const LoginSignup(),
-        );
+            title: 'Flutter Demo',
+            theme: myTheme,
+            debugShowCheckedModeBanner: false,
+            home: AnimatedScreen(
+              animated: animated,
+            ));
       },
+    );
+  }
+}
+
+class AnimatedScreen extends StatefulWidget {
+  const AnimatedScreen({super.key, required this.animated});
+  final Color animated;
+  @override
+  State<AnimatedScreen> createState() => _AnimatedScreenState();
+}
+
+class _AnimatedScreenState extends State<AnimatedScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSplashScreen(
+      splash: Lottie.asset('assets/lotties/loading.json'),
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      splashIconSize: 255,
+      duration: 3000,
+      splashTransition: SplashTransition.fadeTransition,
+      animationDuration: Duration(seconds: 2),
+      nextScreen: show
+          ? AcceuilScreen()
+          : logPref
+              ? Dashboard(
+                  RouteLink: "mainDashboard",
+                )
+              : const LoginSignup(),
     );
   }
 }

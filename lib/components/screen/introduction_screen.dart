@@ -9,7 +9,8 @@ class AcceuilScreen extends StatelessWidget {
   final List<PageViewModel> pages = [
     PageViewModel(
         title: "Go Survey",
-        body: "Description",
+        body:
+            "Bienvenu dans GoSurvey, l'application qui vous aide a faire des analyses",
         footer: ElevatedButton(
           style: ElevatedButton.styleFrom(
             primary: Color.fromARGB(255, 39, 176, 46),
@@ -26,14 +27,19 @@ class AcceuilScreen extends StatelessWidget {
           },
         ),
         image: Center(
-          child: Image.asset('assets/img/1.jpg'),
+          child: Image.asset(
+            'assets/lotties/start01.gif',
+            width: double.infinity,
+            fit: BoxFit.fill,
+          ),
         ),
         decoration: const PageDecoration(
             titleTextStyle:
                 TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold))),
     PageViewModel(
         title: "Go Survey",
-        body: "Description",
+        body:
+            "Debuter a faire des analyses avec notre application! Optez pour le numerique",
         footer: ElevatedButton(
           child: const Text("Debuter les statistiques"),
           onPressed: () async {
@@ -50,14 +56,18 @@ class AcceuilScreen extends StatelessWidget {
           ),
         ),
         image: Center(
-          child: Image.asset('assets/img/2.png'),
+          child: Image.asset(
+            'assets/lotties/start3.gif',
+            width: double.infinity,
+            fit: BoxFit.fill,
+          ),
         ),
         decoration: const PageDecoration(
             titleTextStyle:
                 TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold))),
     PageViewModel(
         title: "Go Survey",
-        body: "Description",
+        body: "Connectez-vous ou inscrivez-vous pour debuter vos enquetes",
         footer: ElevatedButton(
           style: ElevatedButton.styleFrom(
             primary: Color.fromARGB(255, 39, 176, 46),
@@ -74,7 +84,11 @@ class AcceuilScreen extends StatelessWidget {
           },
         ),
         image: Center(
-          child: Image.asset('assets/img/2.png'),
+          child: Image.asset(
+            'assets/lotties/login.gif',
+            width: double.infinity,
+            fit: BoxFit.fill,
+          ),
         ),
         decoration: const PageDecoration(
             titleTextStyle:

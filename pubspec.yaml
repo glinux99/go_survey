@@ -51,6 +51,7 @@ dependencies:
   lottie: ^1.4.3
   material: ^1.0.0+2
   path: ^1.8.2
+  open_file: ^3.2.1
   path_provider: ^2.0.11
   provider: ^6.0.3
   rating_dialog: ^2.0.4

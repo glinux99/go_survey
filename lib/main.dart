@@ -14,7 +14,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   logPref = prefs.getBool('login') ?? false;
-  show = prefs.getBool("go_surveys") ?? true;
+  show = prefs.getBool("go_survey") ?? true;
   final themeService = await ThemeService.instance;
   var initTheme = themeService.initial;
   runApp(const MyApp());

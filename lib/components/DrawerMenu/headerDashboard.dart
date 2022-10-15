@@ -60,6 +60,10 @@ class _HeaderDashboardState extends State<HeaderDashboard> {
       child: Stack(
         children: [
           Container(
+            padding: EdgeInsets.only(
+              left: 15,
+              bottom: 36 + 15,
+            ),
             height: widget.size.height * .2,
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.secondary,
@@ -69,7 +73,7 @@ class _HeaderDashboardState extends State<HeaderDashboard> {
                 )),
             child: Container(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     "Go SURVEY",

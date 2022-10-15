@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_survey/models/reponses/reponse_service.dart';
 import 'package:go_survey/models/reponses/reponses.dart';
+import 'package:material/material.dart';
+import 'package:open_file/open_file.dart';
 // import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -95,8 +98,7 @@ class _BodyOutputState extends State<BodyOutput> {
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed: excelExport,
-              icon: Icon(FontAwesomeIcons.accessibleIcon))
+              onPressed: excelExport, icon: Icon(FontAwesomeIcons.solidFilePdf))
         ],
       ),
       body: SfDataGrid(
@@ -128,15 +130,32 @@ class _BodyOutputState extends State<BodyOutput> {
   }
 
   Future<void> excelExport() async {
-    final Workbook workbook = _key.currentState!.exportToExcelWorkbook();
-    ;
+    // final excel = Excel.createExcel();
+    // final sheet = excel.sheets[excel.getDefaultSheet() as String];
+    // sheet!.setColWidth(2, 50);
+    // sheet.setColAutoFit(3);
+    // sheet.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 3)).value =
+    //     "COOL";
+    // excel.save();
+    // print('cccc');
+    // final Workbook workbook = _key.currentState!.exportToExcelWorkbook();
+    // ;
+    // final List<int> bytes = workbook.saveAsStream();
+    // workbook.dispose();
+    // final String path = (await getApplicationSupportDirectory()).path;
+    // final String fileName = '$path/goSurvey.xlsx';
+    // final File file = File(fileName);
+    // await file.writeAsBytes(bytes, flush: true);
+    // OpenFile.open(fileName);
+    final Workbook workbook = Workbook();
+    final Worksheet sheet = workbook.worksheets[0];
     final List<int> bytes = workbook.saveAsStream();
-    workbook.dispose();
+
     final String path = (await getApplicationSupportDirectory()).path;
-    final String fileName = '$path/goSurvey.xlsx';
+    final String fileName = '$path/Output.xlsx';
     final File file = File(fileName);
     await file.writeAsBytes(bytes, flush: true);
-    // OpenFile.open(fileName);
+    OpenFile.open(fileName);
   }
 }
 

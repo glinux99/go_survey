@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_survey/auth/login.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -27,11 +28,7 @@ class AcceuilScreen extends StatelessWidget {
           },
         ),
         image: Center(
-          child: Image.asset(
-            'assets/lotties/start01.gif',
-            width: double.infinity,
-            fit: BoxFit.fill,
-          ),
+          child: Lottie.asset('assets/lotties/start1.json'),
         ),
         decoration: const PageDecoration(
             titleTextStyle:
@@ -56,11 +53,7 @@ class AcceuilScreen extends StatelessWidget {
           ),
         ),
         image: Center(
-          child: Image.asset(
-            'assets/lotties/start3.gif',
-            width: double.infinity,
-            fit: BoxFit.fill,
-          ),
+          child: Lottie.asset('assets/lotties/start2.json'),
         ),
         decoration: const PageDecoration(
             titleTextStyle:
@@ -84,11 +77,7 @@ class AcceuilScreen extends StatelessWidget {
           },
         ),
         image: Center(
-          child: Image.asset(
-            'assets/lotties/login.gif',
-            width: double.infinity,
-            fit: BoxFit.fill,
-          ),
+          child: Lottie.asset('assets/lotties/start3.json'),
         ),
         decoration: const PageDecoration(
             titleTextStyle:

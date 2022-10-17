@@ -240,14 +240,14 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
                         print(cle);
                       });
                     });
-                    // print(questionsList.length);
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => ReadReponseView(
-                    //               rubriqueName: widget.questionnaires,
-                    //               rubriqueId: widget.questIndex,
-                    //             )));
+                    print(questionsList.length);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ReadReponseView(
+                                  rubriqueName: widget.questionnaires,
+                                  rubriqueId: widget.questIndex,
+                                )));
                   } else {
                     print(questionsList.length);
                     print(reponseQuestion);

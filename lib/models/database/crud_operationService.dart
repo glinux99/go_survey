@@ -51,6 +51,12 @@ class CrudOperation {
     );
   }
 
+  readDataByQuestion(table, champ, champValue) async {
+    var connection = await database;
+    return await connection
+        ?.query(table, where: '$champ =?', whereArgs: [champValue]);
+  }
+
   readReponseByContraints(table, champ, champ2, champValue) async {
     var connection = await database;
     return await connection?.query(table,

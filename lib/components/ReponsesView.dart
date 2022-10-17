@@ -41,7 +41,7 @@ class _ReadReponseViewState extends State<ReadReponseView> {
 
   getReponses() async {
     var rubriques =
-        await _reponseService.getReponsesByRubriqueId(widget.rubriqueId! + 1);
+        await _reponseService.getReponsesByRubriqueId2(widget.rubriqueId! + 1);
     rubriques.forEach((rub) {
       setState(() {
         var rubriqueModel = ReponsesModel();

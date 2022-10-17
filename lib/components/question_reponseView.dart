@@ -22,6 +22,7 @@ class QuestionReponseViewView extends StatefulWidget {
 class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
   late List<QuestionnaireModel> questionsList;
   var _result;
+  late int cle;
   final _questionnaireService = QuestionnaireService();
   late final List<ReponsesModel> reponsesList;
   late final Map<int, String> reponseQuestion;
@@ -33,6 +34,7 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
     getRubriques();
     _globalKey = GlobalKey();
     reponseQuestion = {};
+    cle = 0;
     reponsesList = [];
     _controller = TextEditingController();
     questionsList = <QuestionnaireModel>[];
@@ -224,29 +226,28 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
                   var recPref = await SharedPreferences.getInstance();
                   var userId = recPref.getInt('authId');
 
-                  int cle = 0;
                   if (questionsList.length == reponseQuestion.length) {
                     setState(() {
-                      cle++;
+                      cle = 0;
                       reponseQuestion.forEach((key, value) async {
                         var reponse = ReponsesModel();
                         reponse.reponse = value;
-                        reponse.questionId = cle;
+                        reponse.questionId = questionsList[cle].id;
                         reponse.rubriqueId = widget.questIndex! + 1;
+                        cle++;
                         reponse.userId = userId;
                         var result = await reponseService.saveReponses(reponse);
-                        print(reponseQuestion);
                         print(cle);
                       });
                     });
-                    print(questionsList.length);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ReadReponseView(
-                                  rubriqueName: widget.questionnaires,
-                                  rubriqueId: widget.questIndex,
-                                )));
+                    // print(questionsList.length);
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => ReadReponseView(
+                    //               rubriqueName: widget.questionnaires,
+                    //               rubriqueId: widget.questIndex,
+                    //             )));
                   } else {
                     print(questionsList.length);
                     print(reponseQuestion);

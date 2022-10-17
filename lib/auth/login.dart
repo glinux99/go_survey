@@ -458,6 +458,7 @@ class _LoginSignupState extends State<LoginSignup> {
     );
   }
 
+// Section de connection
   Container loginSection() {
     return Container(
       margin: const EdgeInsets.only(top: 20),

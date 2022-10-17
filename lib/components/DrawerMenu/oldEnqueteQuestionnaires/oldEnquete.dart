@@ -6,35 +6,13 @@ import 'package:go_survey/models/rubriques/rubrique.dart';
 import 'package:go_survey/models/rubriques/rubrique_service.dart';
 
 class OldEnquete extends StatefulWidget {
-  const OldEnquete({super.key});
-
+  const OldEnquete({super.key, required this.rubriquesList});
+  final List<RubriqueModel> rubriquesList;
   @override
   State<OldEnquete> createState() => _OldEnqueteState();
 }
 
 class _OldEnqueteState extends State<OldEnquete> {
-  late List<RubriqueModel> rubriquesList;
-
-  final _rubriqueService = RubriqueService();
-  @override
-  void initState() {
-    getRubriques();
-    rubriquesList = <RubriqueModel>[];
-    super.initState();
-  }
-
-  getRubriques() async {
-    var rubriques = await _rubriqueService.getAllRubriques();
-    setState(() {
-      rubriques.forEach((rub) {
-        var rubriqueModel = RubriqueModel();
-        rubriqueModel.id = rub['id'];
-        rubriqueModel.description = rub['description'];
-        rubriquesList.add(rubriqueModel);
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -52,7 +30,7 @@ class _OldEnqueteState extends State<OldEnquete> {
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     mainAxisSpacing: 0, crossAxisCount: 2),
                 shrinkWrap: true,
-                itemCount: rubriquesList.length,
+                itemCount: widget.rubriquesList.length,
                 itemBuilder: (BuildContext context, int index) =>
                     GestureDetector(
                   onTap: () {
@@ -65,8 +43,8 @@ class _OldEnqueteState extends State<OldEnquete> {
                   },
                   child: EnqueteWidget(
                     img: "assets/img/2.png",
-                    CountQ: rubriquesList[index].questCount ?? 0,
-                    titre: rubriquesList[index].description ?? '',
+                    CountQ: widget.rubriquesList[index].questCount ?? 0,
+                    titre: widget.rubriquesList[index].description ?? '',
                   ),
                 ),
               ),

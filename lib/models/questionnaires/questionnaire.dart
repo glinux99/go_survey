@@ -2,6 +2,7 @@ class QuestionnaireModel {
   int? id;
   String? question;
   String? typeReponse;
+  int? questionId;
   int? userId;
   int? rubriqueId;
   questionnaireMap() {
@@ -11,6 +12,7 @@ class QuestionnaireModel {
     mapping['typeReponse'] = typeReponse!;
     mapping['userId'] = userId!;
     mapping['rubriqueId'] = rubriqueId!;
+    mapping['questionId'] = questionId!;
     return mapping;
   }
 }

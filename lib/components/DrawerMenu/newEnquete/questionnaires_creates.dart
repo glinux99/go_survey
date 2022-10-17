@@ -181,14 +181,21 @@ class _QuestionCreateState extends State<QuestionCreate> {
 
                     // modaliteSave.
                     int typereponse = 0;
+                    int? questId = 1;
                     listClass.list.forEach((question) async {
                       var questionSave = QuestionnaireModel();
                       questionSave.question = question;
                       questionSave.typeReponse = reponseTypeList[typereponse];
                       questionSave.rubriqueId = rubriqueId;
+                      questionSave.questionId = questId;
                       typereponse++;
+                      questId = questId! + 1;
                       questionSave.userId = userId;
+
                       await questionnaireService.saveQuestion(questionSave);
+                      // A effacer
+
+                      // effacer
                       var rub = RubriqueService();
                       var rubriques = await await rub.updateRubrique(
                           rubriqueId, typereponse);
@@ -198,8 +205,10 @@ class _QuestionCreateState extends State<QuestionCreate> {
                               reponseTypeList[typereponse] != 1)) {
                         var modaliteSave = ModaliteModel();
                       }
-                      print(typereponse);
-                      print('ok');
+
+                      // print(typereponse);
+                      // print(questionSave.questionId);
+                      // print('ok');
                       // print(result);
 
                       // add params for questionnaireRe
@@ -207,6 +216,17 @@ class _QuestionCreateState extends State<QuestionCreate> {
                       //     context,
                       //     MaterialPageRoute(
                       //         builder: (context) => QuestionReponseViewView()));
+
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          backgroundColor: Colors.green[200],
+                          elevation: 2,
+                          padding: EdgeInsetsGeometry.lerp(
+                              EdgeInsets.all(12), EdgeInsets.all(12), 1),
+                          content: Container(
+                            height: 50,
+                            child: Text(
+                                "Le questionnaire a ete configure avec succes avec success"),
+                          )));
                     });
                   },
                   icon: Icon(

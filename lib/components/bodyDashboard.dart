@@ -6,8 +6,8 @@ import 'package:go_survey/models/rubriques/rubrique.dart';
 import 'package:go_survey/models/rubriques/rubrique_service.dart';
 
 class MainDashboard extends StatefulWidget {
-  const MainDashboard({super.key});
-
+  const MainDashboard({super.key, required this.foundRUb});
+  final List<RubriqueModel> foundRUb;
   @override
   State<MainDashboard> createState() => _MainDashboardState();
 }
@@ -50,17 +50,18 @@ class _MainDashboardState extends State<MainDashboard> {
           SizedBox(
             height: size.height * .232,
             child: ListView.builder(
-              reverse: true,
-              physics: ClampingScrollPhysics(),
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: rubriquesList.length,
-              itemBuilder: (BuildContext context, int index) => EnqueteWidget(
-                img: "assets/img/2.png",
-                titre: rubriquesList[index].description ?? '',
-                CountQ: rubriquesList[index].questCount!,
-              ),
-            ),
+                reverse: true,
+                physics: ClampingScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.foundRUb.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return EnqueteWidget(
+                    img: "assets/img/2.png",
+                    titre: widget.foundRUb[index].description ?? '',
+                    CountQ: widget.foundRUb[index].questCount!,
+                  );
+                }),
           ),
           TitreButtonPlus(
             titreBtn: "Voir plus",

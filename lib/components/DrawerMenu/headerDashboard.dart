@@ -1,9 +1,11 @@
 // ignore: file_names
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:go_survey/admin/dashbord.dart';
 import 'package:go_survey/auth/login.dart';
 import 'package:go_survey/components/DrawerMenu/apropos.dart';
+import 'package:go_survey/components/DrawerMenu/configs/rubriques.dart';
 import 'package:go_survey/components/DrawerMenu/newEnquete/questionnaires_creates.dart';
 import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/oldEnquete.dart';
 import 'package:go_survey/components/DrawerMenu/user/userprofile.dart';
@@ -20,116 +22,6 @@ import 'package:rating_dialog/rating_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../save.dart';
-
-class HeaderDashboard extends StatefulWidget {
-  const HeaderDashboard({
-    Key? key,
-    required this.size,
-  }) : super(key: key);
-
-  final Size size;
-
-  @override
-  State<HeaderDashboard> createState() => _HeaderDashboardState();
-}
-
-bool isdark = false;
-
-class _HeaderDashboardState extends State<HeaderDashboard> {
-  late SharedPreferences prefs;
-
-  Future<bool> loadPrefs() async {
-    prefs = await SharedPreferences.getInstance();
-    // view this today for configures preferencies please
-    prefs.setBool('isDark', false);
-    isdark = prefs.getBool('isDark')!;
-    return isdark;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    loadPrefs();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 15 * 2.5),
-      height: widget.size.height * .14,
-      child: Stack(
-        children: [
-          Container(
-            padding: EdgeInsets.only(
-              left: 15,
-              bottom: 36 + 15,
-            ),
-            height: widget.size.height * .2,
-            decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(36),
-                  bottomRight: Radius.circular(36),
-                )),
-            child: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Go SURVEY",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    foregroundImage: AssetImage(
-                      "assets/img/ico.png",
-                    ),
-                    radius: 80,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              margin: EdgeInsets.symmetric(horizontal: 15),
-              height: 48,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                        offset: Offset(0, 10),
-                        blurRadius: 50,
-                        color: Colors.green.withOpacity(.23))
-                  ]),
-              child: TextField(
-                onChanged: (value) {},
-                decoration: InputDecoration(
-                    hintText: "Rechercher...",
-                    iconColor: Colors.green,
-                    hintStyle: TextStyle(
-                      color: Colors.green.withOpacity(.5),
-                    ),
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    suffixIcon: Icon(Icons.search)),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
 
 // Menu drawer
 class MenuGauche extends StatefulWidget {
@@ -213,9 +105,7 @@ class _MenuGaucheState extends State<MenuGauche> {
                           return IconButton(
                             onPressed: () async {
                               var prefs = await SharedPreferences.getInstance();
-                              prefs.setBool(
-                                  'isDark', !prefs.getBool('isDark')!);
-                              isdark = prefs.getBool('isDark')!;
+
                               ThemeSwitcher.of(context).changeTheme(
                                 theme: ThemeModelInheritedNotifier.of(context)
                                             .theme
@@ -460,7 +350,11 @@ class _MenuGaucheState extends State<MenuGauche> {
           ListTile(
             leading: const Icon(Icons.group),
             title: const Text('Inviter des amis'),
-            onTap: () {},
+            onTap: () async {
+              await FlutterShare.share(
+                  title:
+                      "Go Survey App: Telecharger notre application a partir de notre Site web");
+            },
           ),
           ListTile(
             leading: const Icon(Icons.info),
@@ -609,20 +503,155 @@ class DashboardBody extends StatefulWidget {
 }
 
 class _DashboardBodyState extends State<DashboardBody> {
+  late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    rubriquesList = <RubriqueModel>[];
+    _foundRUb = rubriquesList;
+    getRubriques();
+    super.initState();
+  }
+
+  List<RubriqueModel> _foundRUb = [];
+  late List<RubriqueModel> rubriquesList;
+  var _rubriqueService = RubriqueService();
+  getRubriques() async {
+    var rubriques = await _rubriqueService.getAllRubriques();
+    setState(() {
+      rubriques.forEach((rub) {
+        var rubriqueModel = RubriqueModel();
+        rubriqueModel.id = rub['id'];
+        rubriqueModel.description = rub['description'];
+        rubriqueModel.questCount = rub['questCount'];
+        rubriquesList.add(rubriqueModel);
+      });
+    });
+    print(rubriquesList);
+  }
+
+  void _runFiltre(String value) {
+    List<RubriqueModel> result = [];
+    if (value.isEmpty) {
+      result = rubriquesList;
+    } else {
+      result = rubriquesList
+          .where((element) =>
+              element.description!.toLowerCase().contains(value.toLowerCase()))
+          .toList();
+    }
+    setState(() {
+      _foundRUb = result;
+    });
+  }
+
+  Widget header() {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      margin: EdgeInsets.only(bottom: 15 * 2.5),
+      height: size.height * .14,
+      child: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.only(
+              left: 15,
+              bottom: 36 + 15,
+            ),
+            height: size.height * .2,
+            decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondary,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(36),
+                  bottomRight: Radius.circular(36),
+                )),
+            child: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Go Survey",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Container(
+                    width: 100,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      foregroundImage: AssetImage(
+                        "assets/img/ico.png",
+                      ),
+                      radius: 70,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          // TextButton(
+          //     onPressed: () {
+          //       print(_foundRUb[0].id);
+          //     },
+          //     child: Text("OOOOK")),
+
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              margin: EdgeInsets.symmetric(horizontal: 15),
+              height: 48,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                        offset: Offset(0, 10),
+                        blurRadius: 50,
+                        color: Colors.green.withOpacity(.23))
+                  ]),
+              child: TextField(
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.secondary),
+                onChanged: (value) => _runFiltre(value),
+                decoration: InputDecoration(
+                    hintText: "Rechercher...",
+                    iconColor: Colors.green,
+                    hintStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary),
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    suffixIcon: Icon(Icons.search)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     // activation du scroking dans des petites appareils
     return SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            HeaderDashboard(size: size),
+            header(),
             widget.RouteLink == "mainDashboard"
-                ? MainDashboard()
+                ? MainDashboard(
+                    foundRUb: _foundRUb,
+                  )
                 : widget.RouteLink == "oldEnquete"
-                    ? OldEnquete()
-                    : NewEnquete(),
+                    ? OldEnquete(
+                        rubriquesList: _foundRUb,
+                      )
+                    : NewEnquete(
+                        rubriquesList: _foundRUb,
+                      ),
           ],
         ));
   }

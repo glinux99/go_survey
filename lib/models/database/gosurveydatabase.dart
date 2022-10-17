@@ -49,6 +49,7 @@ description $stringType,questCount $integerType, userId $integerType, FOREIGN KE
 CREATE TABLE questionnaires(id $idType,
 question $textType,
 typeReponse $stringType,
+questionId $integerType,
 rubriqueId $integerType,
 userId $integerType,
 FOREIGN KEY (rubriqueId) REFERENCES rubriques (id),

@@ -9,42 +9,20 @@ import 'package:go_survey/models/rubriques/rubrique_service.dart';
 class NewEnquete extends StatefulWidget {
   const NewEnquete({
     Key? key,
+    required this.rubriquesList,
   }) : super(key: key);
-
+  final List<RubriqueModel> rubriquesList;
   @override
   State<NewEnquete> createState() => _NewEnqueteState();
 }
 
 class _NewEnqueteState extends State<NewEnquete> {
-  late List<RubriqueModel> rubriquesList;
-
-  final _rubriqueService = RubriqueService();
-  @override
-  void initState() {
-    getRubriques();
-    rubriquesList = <RubriqueModel>[];
-    super.initState();
-  }
-
-  getRubriques() async {
-    var rubriques = await _rubriqueService.getAllRubriques();
-    setState(() {
-      rubriques.forEach((rub) {
-        var rubriqueModel = RubriqueModel();
-        rubriqueModel.id = rub['id'];
-        rubriqueModel.description = rub['description'];
-        rubriqueModel.questCount = rub['questCount'];
-        rubriquesList.add(rubriqueModel);
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Column(
       children: [
-        if (rubriquesList.isEmpty == true)
+        if (widget.rubriquesList.isEmpty == true)
           Center(
               child: Column(
             children: [
@@ -65,7 +43,7 @@ class _NewEnqueteState extends State<NewEnquete> {
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           mainAxisSpacing: 0, crossAxisCount: 2),
                       shrinkWrap: true,
-                      itemCount: rubriquesList.length + 1,
+                      itemCount: widget.rubriquesList.length + 1,
                       itemBuilder: (BuildContext context, int index) {
                         if (index == 0) return RubriqueCreateWidget();
                         return GestureDetector(
@@ -76,13 +54,15 @@ class _NewEnqueteState extends State<NewEnquete> {
                                     builder: (context) =>
                                         QuestionReponseViewView(
                                             questIndex: index - 1,
-                                            questionnaires:
-                                                rubriquesList[index - 1])));
+                                            questionnaires: widget
+                                                .rubriquesList[index - 1])));
                           },
                           child: EnqueteWidget(
                             img: "assets/img/2.png",
-                            titre: rubriquesList[index - 1].description ?? '',
-                            CountQ: rubriquesList[index - 1].questCount,
+                            titre:
+                                widget.rubriquesList[index - 1].description ??
+                                    '',
+                            CountQ: widget.rubriquesList[index - 1].questCount,
                           ),
                         );
                       }),

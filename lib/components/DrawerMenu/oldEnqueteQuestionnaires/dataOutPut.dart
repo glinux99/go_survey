@@ -8,7 +8,7 @@ import 'package:go_survey/models/questionnaires/questionnaire_service.dart';
 import 'package:go_survey/models/reponses/reponse_service.dart';
 import 'package:go_survey/models/reponses/reponses.dart';
 import 'package:material/material.dart';
-// import 'package:open_file/open_file.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_datagrid_export/export.dart';
@@ -65,22 +65,22 @@ class _DataOutPutState extends State<DataOutPut> {
       // print(reponsesL2.length);
     });
     // print(questionsList.length);
-    // questionsList.forEach((el) {
-    //   List<String> _rep = [];
-    //   reponsesL.forEach((element) {
-    //     if (el.id == element.questionId!.toInt())
-    //       _rep = ['111', '2222', '33331'];
-    //     else
-    //       _rep = ['111', '2222', '33332'];
-    //   });
-    //   _reponses.add(_rep);
-    // });
+    List<String> _rep = [];
+    for (var i = 0, y = 0; i < reponsesL.length; i++, y++) {
+      _rep.add(reponsesL[i].reponse.toString());
+      if (y > questionsList.length / 2) {
+        _reponses.add(_rep.toList());
+        _rep = [];
+        y = -1;
+      }
+    }
+
+    // print(questionsList.length);
     print(questionsList.length);
-    print(reponsesL.length);
+    // print(reponsesL[5].questionId);
     // print("object");
-    // print(questionsList[1].questionId);
-    // print(questionsList[1].questionId);
-    // print(_reponses);
+    print(_questions);
+    print(_reponses);
   }
 
   @override
@@ -103,9 +103,28 @@ class _DataOutPutState extends State<DataOutPut> {
       appBar: AppBar(
         title: Text("Rsultat de l'enquete"),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: createExcel,
+              icon: Icon(Icons.expand_circle_down_outlined))
+        ],
       ),
       body: TableBuild(),
     ));
+  }
+
+  Future<void> createExcel() async {
+    final Workbook workbook = Workbook();
+    final Worksheet sheet = workbook.worksheets[0];
+    sheet.getRangeByName('A1').setText("Hello world");
+    sheet.getRangeByName('A2').setText("Hello world");
+    final List<int> bytes = workbook.saveAsStream();
+    workbook.dispose();
+    final String path = (await getApplicationDocumentsDirectory()).path;
+    final String fileName = '$path/GoSurvey.xlsx';
+    final File file = File(fileName);
+    await file.writeAsBytes(bytes, flush: true);
+    OpenFile.open(fileName);
   }
 
   Widget TableBuild() {
@@ -115,14 +134,14 @@ class _DataOutPutState extends State<DataOutPut> {
       ['Daniel', 'kikimba'],
     ];
     return SingleChildScrollView(
-        scrollDirection: Axis.horizontal, child: Text('ook')
-        // DataTable(
-        //   columns: _questions.map((e) => DataColumn(label: Text(e))).toList(),
-        //   rows: _reponses
-        //       .map((reponses) =>
-        //           DataRow(cells: reponses.map((e) => DataCell(Text(e))).toList()))
-        //       .toList(),
-        // ),
-        );
+      scrollDirection: Axis.horizontal,
+      child: DataTable(
+        columns: _questions.map((e) => DataColumn(label: Text(e))).toList(),
+        rows: _reponses
+            .map((reponses) =>
+                DataRow(cells: reponses.map((e) => DataCell(Text(e))).toList()))
+            .toList(),
+      ),
+    );
   }
 }

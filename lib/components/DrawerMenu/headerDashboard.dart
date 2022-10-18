@@ -504,7 +504,11 @@ class DashboardBody extends StatefulWidget {
 
 class _DashboardBodyState extends State<DashboardBody> {
   late SharedPreferences prefs;
-
+  late String appTitle = widget.RouteLink == "newEnquete"
+      ? "Nouvelle enquete"
+      : widget.RouteLink == "oldEnquete"
+          ? "Donnees recentes"
+          : "Go Survey";
   @override
   void initState() {
     rubriquesList = <RubriqueModel>[];
@@ -569,7 +573,7 @@ class _DashboardBodyState extends State<DashboardBody> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Go Survey",
+                    appTitle,
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,

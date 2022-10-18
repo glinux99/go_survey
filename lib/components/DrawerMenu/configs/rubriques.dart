@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:go_survey/components/DrawerMenu/headerDashboard.dart';
 import 'package:go_survey/components/DrawerMenu/newEnquete/questionnaires_creates.dart';
 import 'package:go_survey/models/modalites/modalite_service.dart';
 import 'package:go_survey/models/rubriques/rubrique_service.dart';
+import 'package:lottie/lottie.dart';
 
 class EnqueteWidget extends StatefulWidget {
   const EnqueteWidget({
@@ -20,6 +23,10 @@ class EnqueteWidget extends StatefulWidget {
 class _EnqueteWidgetState extends State<EnqueteWidget> {
   @override
   Widget build(BuildContext context) {
+    Random rnd = new Random();
+    int min = 1, max = 10;
+    int file = min + rnd.nextInt(max - min);
+    String img = "assets/img/$file.json";
     Size size = MediaQuery.of(context).size;
     return LayoutBuilder(
       builder: (context, constraint) => Container(
@@ -30,30 +37,37 @@ class _EnqueteWidgetState extends State<EnqueteWidget> {
           top: 10 / 4,
           bottom: 10 * 2.5,
         ),
-
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10)),
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0, 10),
+                blurRadius: 50,
+                color: Colors.green.withOpacity(.23),
+              )
+            ]),
         child: Column(
           children: [
-            Image.asset(
-              widget.img,
-              height: 100,
-              fit: BoxFit.fill,
+            // Image.asset(
+            //   widget.img,
+            //   height: 100,
+            //   fit: BoxFit.fill,
+            // ),
+            Container(
+              height: 99,
+              child: Lottie.asset(img),
+            ),
+            Divider(
+              height: 1,
+              color: Theme.of(context).primaryColor,
             ),
             GestureDetector(
               onTap: () {},
               child: Container(
                 padding: EdgeInsets.all(15 / 2),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(10)),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 10),
-                        blurRadius: 50,
-                        color: Colors.green.withOpacity(.23),
-                      )
-                    ]),
                 child: Flexible(
                   child: Wrap(
                     children: [

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class TitreButtonPlus extends StatelessWidget {
-  const TitreButtonPlus({Key? key, required this.titre, required this.titreBtn})
+  TitreButtonPlus(
+      {Key? key, required this.titre, required this.titreBtn, this.onPressed})
       : super(key: key);
   final String titreBtn, titre;
+  Function()? onPressed;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -15,10 +17,9 @@ class TitreButtonPlus extends StatelessWidget {
             text: titre,
           ),
           TextButton(
-              onPressed: () {},
+              onPressed: onPressed,
               child: Text(
                 titreBtn,
-                style: TextStyle(color: Colors.white),
               ))
         ],
       ),

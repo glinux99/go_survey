@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:go_survey/admin/dashbord.dart';
 import 'package:go_survey/components/DrawerMenu/configs/rubriques.dart';
 import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/enquetes_recentes.dart';
 import 'package:go_survey/components/DrawerMenu/configs/titre_btn_plus.dart';
+import 'package:go_survey/components/question_reponseView.dart';
 import 'package:go_survey/models/rubriques/rubrique.dart';
 import 'package:go_survey/models/rubriques/rubrique_service.dart';
 
@@ -56,27 +60,49 @@ class _MainDashboardState extends State<MainDashboard> {
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.foundRUb.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return EnqueteWidget(
-                    img: "assets/img/2.png",
-                    titre: widget.foundRUb[index].description ?? '',
-                    CountQ: widget.foundRUb[index].questCount!,
+                  Random rnd = new Random();
+                  int min = 1, max = 10;
+                  int file = min + rnd.nextInt(max - min);
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => QuestionReponseViewView(
+                                  questIndex: index,
+                                  questionnaires: rubriquesList[index])));
+                    },
+                    child: EnqueteWidget(
+                      img: "assets/img/$file.json",
+                      titre: widget.foundRUb[index].description ?? '',
+                      CountQ: widget.foundRUb[index].questCount!,
+                    ),
                   );
                 }),
           ),
           TitreButtonPlus(
             titreBtn: "Voir plus",
-            titre: "Nos questionnaires recentes",
+            titre: "Questionnaires recentes",
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Dashboard(
+                            RouteLink: "oldEnquete",
+                          )));
+            },
           ),
           Column(
             children: [
               EnqueteRecente(
-                titre: "Enque sur les enfants de",
-                sousTitre: "Enfant de la rue",
+                titre: "Enquete sur les enfants de la rue",
+                sousTitre: "Une enquete sur les enfant de la rue est une ",
                 RubriqueImg: null,
               ),
               EnqueteRecente(
-                titre: "Enque sur les enfants de",
-                sousTitre: "Enfant de la rue",
+                titre: "Enquete sur les entreprises de la RDC",
+                sousTitre:
+                    "Le programme mondial des enquêtes MICS a été élaboré par l'UNICEF dans les ",
                 RubriqueImg: null,
               ),
               EnqueteRecente(

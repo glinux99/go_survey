@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class EnqueteRecente extends StatefulWidget {
   const EnqueteRecente({
@@ -16,59 +19,52 @@ class EnqueteRecente extends StatefulWidget {
 class _EnqueteRecenteState extends State<EnqueteRecente> {
   @override
   Widget build(BuildContext context) {
+    final List<IconData> points = [
+      FontAwesomeIcons.chartArea,
+      FontAwesomeIcons.chartBar,
+      FontAwesomeIcons.chartColumn,
+      FontAwesomeIcons.chartGantt,
+      FontAwesomeIcons.chartLine,
+      FontAwesomeIcons.chartPie,
+      FontAwesomeIcons.chartSimple
+    ];
+    final Random r = Random();
+
+    IconData randomIcon = points[r.nextInt(points.length)];
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          Container(
-              padding: EdgeInsets.all(16),
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(16)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                            padding: EdgeInsets.all(16),
-                            color: Colors.green,
-                            child: Icon(Icons.graphic_eq)),
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // titre
-                          Text(
-                            widget.titre,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          // sous titre
-                          Text(
-                            widget.sousTitre,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 12),
-                          )
-                        ],
-                      ),
-                      Text('\n\n12'),
-                    ],
-                  ),
-                  Icon(Icons.more_vert),
-                ],
-              )),
           Divider(
+            height: 2,
+          ),
+          Card(
+            elevation: 5,
+            child: ListTile(
+              title: Text(
+                widget.titre,
+                style: TextStyle(fontWeight: FontWeight.bold),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              leading: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                    padding: EdgeInsets.all(16),
+                    color: Colors.green,
+                    child: Icon(randomIcon)),
+              ),
+              subtitle: Text(
+                widget.sousTitre,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 12),
+              ),
+              trailing: Icon(Icons.more_vert_outlined),
+            ),
+          ),
+          SizedBox(
             height: 2,
           )
         ],

@@ -53,7 +53,6 @@ class _DataOutPutState extends State<DataOutPut> {
   getReponses() async {
     var rubriques =
         await _reponseService.getReponsesByRubriqueId(widget.rubriqueId + 1);
-
     rubriques.forEach((rub) {
       var rubriqueModel = ReponsesModel();
       rubriqueModel.id = rub['id'];
@@ -70,20 +69,12 @@ class _DataOutPutState extends State<DataOutPut> {
     for (var i = 0, y = 1; i < reponsesL.length; i++, y++) {
       _rep.add(reponsesL[i].reponse.toString());
       if (y % questionsList.length == 0) {
-        _reponses.add(_rep.toList());
-        _rep = [];
+        setState(() {
+          _reponses.add(_rep.toList());
+          _rep = [];
+        });
       }
-
-      t++;
     }
-
-    // print(questionsList.length);
-    print(questionsList.length);
-    print(reponsesL.length);
-    // print("object");
-    print(_questions);
-    print(_reponses);
-    print(t);
   }
 
   @override
@@ -91,11 +82,26 @@ class _DataOutPutState extends State<DataOutPut> {
     // TODO: implement initState
     questionsList = <QuestionnaireModel>[];
     reponsesL = <ReponsesModel>[];
-
     getRubriques();
     getReponses();
-
     super.initState();
+  }
+
+  Widget TableBuild() {
+    if (_questions.isEmpty) {
+      return Text("No data Fetch");
+    } else {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          columns: _questions.map((e) => DataColumn(label: Text(e))).toList(),
+          rows: _reponses
+              .map((reponses) => DataRow(
+                  cells: reponses.map((e) => DataCell(Text(e))).toList()))
+              .toList(),
+        ),
+      );
+    }
   }
 
   @override
@@ -142,18 +148,5 @@ class _DataOutPutState extends State<DataOutPut> {
     final File file = File(fileName);
     await file.writeAsBytes(bytes, flush: true);
     OpenFile.open(fileName);
-  }
-
-  Widget TableBuild() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        columns: _questions.map((e) => DataColumn(label: Text(e))).toList(),
-        rows: _reponses
-            .map((reponses) =>
-                DataRow(cells: reponses.map((e) => DataCell(Text(e))).toList()))
-            .toList(),
-      ),
-    );
   }
 }

@@ -57,7 +57,7 @@ class CrudOperation {
       table,
       where: '$champ =?',
       whereArgs: [champValue],
-      orderBy: "id ASC",
+      orderBy: "id DEsC",
     );
   }
 

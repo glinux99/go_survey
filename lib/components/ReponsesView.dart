@@ -119,6 +119,8 @@ class _ReadReponseViewState extends State<ReadReponseView> {
               Expanded(
                   child: ListView.builder(
                       itemCount: questionsList.length,
+                      reverse: true,
+                      shrinkWrap: true,
                       itemBuilder: (context, index) => Card(
                             elevation: 10,
                             margin: EdgeInsets.symmetric(

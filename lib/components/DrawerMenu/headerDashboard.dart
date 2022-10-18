@@ -8,6 +8,7 @@ import 'package:go_survey/components/DrawerMenu/apropos.dart';
 import 'package:go_survey/components/DrawerMenu/configs/rubriques.dart';
 import 'package:go_survey/components/DrawerMenu/newEnquete/questionnaires_creates.dart';
 import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/oldEnquete.dart';
+import 'package:go_survey/components/DrawerMenu/test.dart';
 import 'package:go_survey/components/DrawerMenu/user/userprofile.dart';
 import 'package:go_survey/components/bodyDashboard.dart';
 import 'package:go_survey/components/DrawerMenu/newEnquete/newsurvey.dart';
@@ -368,10 +369,12 @@ class _MenuGaucheState extends State<MenuGauche> {
             leading: const Icon(Icons.logout),
             title: const Text('Deconection'),
             onTap: () async {
-              final prefs = await SharedPreferences.getInstance();
-              prefs.setBool('login', false);
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => LoginSignup()));
+              // final prefs = await SharedPreferences.getInstance();
+              // prefs.setBool('login', false);
+              // Navigator.pushReplacement(context,
+              //     MaterialPageRoute(builder: (context) => LoginSignup()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Testy()));
             },
           ),
         ],

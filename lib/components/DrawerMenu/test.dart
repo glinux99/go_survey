@@ -1,69 +1,40 @@
 import 'package:flutter/material.dart';
 
-class TestPage extends StatefulWidget {
-  const TestPage({Key? key}) : super(key: key);
+class Testy extends StatefulWidget {
+  const Testy({super.key});
 
   @override
-  _TestPageState createState() => _TestPageState();
+  State<Testy> createState() => _TestyState();
 }
 
-class _TestPageState extends State<TestPage> {
-  // The group value
-  var _result;
+class _TestyState extends State<Testy> {
+  @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'Kindacode.com',
+      body: NestedScrollView(
+        headerSliverBuilder: (context, value) {
+          return [
+            SliverAppBar(
+              title: Text('AppBar'),
+              pinned: true,
+              floating: true,
+              bottom: TabBar(
+                tabs: [
+                  Tab(icon: Icon(Icons.call), text: 'Call'),
+                  Tab(icon: Icon(Icons.message), text: 'Message'),
+                ],
+              ),
+            ),
+          ];
+        },
+        body: TabBarView(
+          children: [
+            FlutterLogo(),
+            FlutterLogo(),
+          ],
         ),
       ),
-      body: Padding(
-          padding: const EdgeInsets.all(25),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('1 + 2 + 4 = ?'),
-              RadioListTile(
-                  title: const Text('4'),
-                  value: 4,
-                  groupValue: _result,
-                  onChanged: (value) {
-                    setState(() {
-                      _result = value;
-                    });
-                  }),
-              RadioListTile(
-                  title: const Text('5.4'),
-                  value: 5.4,
-                  groupValue: _result,
-                  onChanged: (value) {
-                    setState(() {
-                      _result = value;
-                    });
-                  }),
-              RadioListTile(
-                  title: const Text('6'),
-                  value: 6,
-                  groupValue: _result,
-                  onChanged: (value) {
-                    setState(() {
-                      _result = value;
-                    });
-                  }),
-              RadioListTile(
-                  title: const Text('7'),
-                  value: 7,
-                  groupValue: _result,
-                  onChanged: (value) {
-                    setState(() {
-                      _result = value;
-                    });
-                  }),
-              const SizedBox(height: 25),
-              Text(_result == 7 ? 'Correct!' : 'Please chose the right answer!')
-            ],
-          )),
     );
   }
 }

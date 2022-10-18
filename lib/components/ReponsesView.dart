@@ -24,7 +24,7 @@ class _ReadReponseViewState extends State<ReadReponseView> {
   final _reponseService = ReponseService();
   getRubriques() async {
     var rubriques = await _questionnaireService
-        .getQuestionByIdRubrique(widget.rubriqueId! + 1);
+        .getQuestionByIdRubrique2(widget.rubriqueId! + 1);
     rubriques.forEach((rub) {
       setState(() {
         var rubriqueModel = QuestionnaireModel();
@@ -82,7 +82,7 @@ class _ReadReponseViewState extends State<ReadReponseView> {
                 decoration: BoxDecoration(
                     borderRadius:
                         BorderRadius.only(bottomLeft: Radius.circular(50)),
-                    color: Colors.green),
+                    color: Theme.of(context).primaryColor),
                 child: Stack(
                   children: [
                     Positioned(
@@ -119,57 +119,20 @@ class _ReadReponseViewState extends State<ReadReponseView> {
               Expanded(
                   child: ListView.builder(
                       itemCount: questionsList.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            SizedBox(
-                              height: 10,
+                      itemBuilder: (context, index) => Card(
+                            elevation: 10,
+                            margin: EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
+                            child: ListTile(
+                              leading: Text(
+                                (index + 1).toString(),
+                              ),
+                              title: Text(
+                                  questionsList[index].question.toString()),
+                              subtitle: Text(
+                                  '\n' + reponsesL[index].reponse.toString()),
                             ),
-                            Container(
-                                width: double.infinity,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Material(
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.green[300],
-                                            borderRadius:
-                                                BorderRadius.circular(5.0),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Colors.green,
-                                                  offset: Offset(-10, 10),
-                                                  blurRadius: 20,
-                                                  spreadRadius: 4)
-                                            ]),
-                                        child: ConstrainedBox(
-                                            constraints: BoxConstraints(
-                                              minHeight: 40,
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(12.0),
-                                              child: Column(
-                                                children: [
-                                                  Text(
-                                                    questionsList[index]
-                                                        .question
-                                                        .toString(),
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  ),
-                                                  Text('\n' +
-                                                      reponsesL[index]
-                                                          .reponse
-                                                          .toString()),
-                                                ],
-                                              ),
-                                            ))),
-                                  ),
-                                )),
-                          ],
-                        );
-                      })),
+                          ))),
               Padding(
                 padding: const EdgeInsets.all(7.0),
                 child: TextButton(

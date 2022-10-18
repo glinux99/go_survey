@@ -24,8 +24,8 @@ class DataOutPut extends StatefulWidget {
 }
 
 class _DataOutPutState extends State<DataOutPut> {
-  late List<List<String>> _reponses;
-  late List<String> _questions;
+  List<List<String>> _reponses = [];
+  List<String> _questions = [];
   late List<QuestionnaireModel> questionsList;
   late List<ReponsesModel> reponsesL;
   final _questionnaireService = QuestionnaireService();
@@ -66,21 +66,24 @@ class _DataOutPutState extends State<DataOutPut> {
     });
     // print(questionsList.length);
     List<String> _rep = [];
-    for (var i = 0, y = 0; i < reponsesL.length; i++, y++) {
+    var t = 0;
+    for (var i = 0, y = 1; i < reponsesL.length; i++, y++) {
       _rep.add(reponsesL[i].reponse.toString());
-      if (y > questionsList.length / 2) {
+      if (y % questionsList.length == 0) {
         _reponses.add(_rep.toList());
         _rep = [];
-        y = -1;
       }
+
+      t++;
     }
 
     // print(questionsList.length);
     print(questionsList.length);
-    // print(reponsesL[5].questionId);
+    print(reponsesL.length);
     // print("object");
     print(_questions);
     print(_reponses);
+    print(t);
   }
 
   @override
@@ -88,8 +91,7 @@ class _DataOutPutState extends State<DataOutPut> {
     // TODO: implement initState
     questionsList = <QuestionnaireModel>[];
     reponsesL = <ReponsesModel>[];
-    _questions = [];
-    _reponses = [];
+
     getRubriques();
     getReponses();
 
@@ -98,6 +100,11 @@ class _DataOutPutState extends State<DataOutPut> {
 
   @override
   Widget build(BuildContext context) {
+    final _question = ['first Name', 'Last Name'];
+    final _reponse = [
+      ['Daniel', 'kikimba'],
+      ['Daniel', 'kikimba'],
+    ];
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -106,7 +113,7 @@ class _DataOutPutState extends State<DataOutPut> {
         actions: [
           IconButton(
               onPressed: createExcel,
-              icon: Icon(Icons.expand_circle_down_outlined))
+              icon: Icon(FontAwesomeIcons.solidFileExcel))
         ],
       ),
       body: TableBuild(),
@@ -116,8 +123,18 @@ class _DataOutPutState extends State<DataOutPut> {
   Future<void> createExcel() async {
     final Workbook workbook = Workbook();
     final Worksheet sheet = workbook.worksheets[0];
-    sheet.getRangeByName('A1').setText("Hello world");
-    sheet.getRangeByName('A2').setText("Hello world");
+    for (var i = 0; i < _questions.length; i++) {
+      // sheet.getRangeByName('A1').setText(_questions[i].toString());
+      sheet.getRangeByIndex(1, i + 1).setText(_questions[i].toString());
+    }
+    for (var i = 0; i < _reponses.length; i++) {
+      for (var y = 0; y < _reponses[i].length; y++) {
+        sheet.getRangeByIndex(i + 2, y + 1).setText(_reponses[i][y].toString());
+      }
+    }
+    print(_reponses[0].length);
+    print('ok');
+    print(_questions.length);
     final List<int> bytes = workbook.saveAsStream();
     workbook.dispose();
     final String path = (await getApplicationDocumentsDirectory()).path;
@@ -128,11 +145,6 @@ class _DataOutPutState extends State<DataOutPut> {
   }
 
   Widget TableBuild() {
-    final columns = ['first Name', 'Last Name'];
-    final reponse = [
-      ['Daniel', 'kikimba'],
-      ['Daniel', 'kikimba'],
-    ];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(

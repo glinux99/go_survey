@@ -80,7 +80,7 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
             decoration: BoxDecoration(
                 borderRadius:
                     BorderRadius.only(bottomLeft: Radius.circular(50)),
-                color: Colors.green),
+                color: Theme.of(context).colorScheme.secondary),
             child: Stack(
               children: [
                 Positioned(
@@ -117,107 +117,57 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
           Expanded(
               child: ListView.builder(
                   itemCount: questionsList.length,
-                  itemBuilder: (context, index) {
-                    return Dismissible(
-                      key: Key(questionsList[index].question.toString()),
-                      // onDismissed: ((direction) {
-                      //   setState(() {
-                      //     question.removeAt(index);
-                      //   });
-                      // }),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 10,
+                  itemBuilder: (context, index) => Card(
+                        elevation: 10,
+                        margin:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        child: ListTile(
+                          leading: Text(
+                            (index + 1).toString(),
                           ),
-                          Container(
-                              width: double.infinity,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Material(
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.green[300],
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: Colors.green,
-                                                offset: Offset(-10, 10),
-                                                blurRadius: 20,
-                                                spreadRadius: 4)
-                                          ]),
-                                      child: ConstrainedBox(
-                                          constraints: BoxConstraints(
-                                            minHeight: 40,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(12.0),
-                                            child: Column(
-                                              children: [
-                                                Text(questionsList[index]
-                                                    .question
-                                                    .toString()),
-                                                if (questionsList[index]
-                                                        .typeReponse
-                                                        .toString() ==
-                                                    "Reponse textuelle")
-                                                  TextField(
-                                                    onChanged: (newValue) {
-                                                      reponseQuestion
-                                                          .addEntries([
-                                                        MapEntry(index,
-                                                            newValue.toString())
-                                                      ]);
-                                                      print(reponseQuestion);
-                                                    },
-                                                  ),
-                                                if (questionsList[index]
-                                                        .typeReponse
-                                                        .toString() ==
-                                                    "Reponse Numerique")
-                                                  TextField(
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    onChanged: (newValue) {
-                                                      reponseQuestion
-                                                          .addEntries([
-                                                        MapEntry(index,
-                                                            newValue.toString())
-                                                      ]);
-                                                      print(reponseQuestion);
-                                                    },
-                                                  ),
-                                                if (questionsList[index]
-                                                        .typeReponse
-                                                        .toString() ==
-                                                    "Modalite [1. Oui, 2. Non]")
-                                                  Column(
-                                                    children: [
-                                                      // Some code
-                                                      Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 10),
-                                                          child:
-                                                              RadioButtonField([
-                                                            '1. Oui',
-                                                            '2. Non'
-                                                          ], reponseQuestion,
-                                                                  index)),
-                                                      Text(reponseQuestion
-                                                          .toString())
-                                                    ],
-                                                  ),
-                                              ],
-                                            ),
-                                          ))),
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(questionsList[index].question.toString()),
+                              if (questionsList[index].typeReponse.toString() ==
+                                  "Reponse textuelle")
+                                TextField(
+                                  textInputAction: TextInputAction.newline,
+                                  onChanged: (newValue) {
+                                    reponseQuestion.addEntries(
+                                        [MapEntry(index, newValue.toString())]);
+                                    print(reponseQuestion);
+                                  },
                                 ),
-                              )),
-                        ],
-                      ),
-                    );
-                  })),
+                              if (questionsList[index].typeReponse.toString() ==
+                                  "Reponse Numerique")
+                                TextField(
+                                  keyboardType: TextInputType.number,
+                                  onChanged: (newValue) {
+                                    reponseQuestion.addEntries(
+                                        [MapEntry(index, newValue.toString())]);
+                                    print(reponseQuestion);
+                                  },
+                                ),
+                              if (questionsList[index].typeReponse.toString() ==
+                                  "Modalite [1. Oui, 2. Non]")
+                                Column(
+                                  children: [
+                                    // Some code
+                                    Padding(
+                                        padding: EdgeInsets.only(bottom: 10),
+                                        child: RadioButtonField(
+                                            ['1. Oui', '2. Non'],
+                                            reponseQuestion,
+                                            index)),
+                                    // Text(reponseQuestion
+                                    //     .toString())
+                                  ],
+                                ),
+                            ],
+                          ),
+                        ),
+                      ))),
           Padding(
             padding: const EdgeInsets.all(7.0),
             child: TextButton(

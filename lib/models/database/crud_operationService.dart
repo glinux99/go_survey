@@ -51,6 +51,16 @@ class CrudOperation {
     );
   }
 
+  readDataByContraints2(table, champ, champValue) async {
+    var connection = await database;
+    return await connection?.query(
+      table,
+      where: '$champ =?',
+      whereArgs: [champValue],
+      orderBy: "id ASC",
+    );
+  }
+
   readDataByQuestion(table, champ, champValue) async {
     var connection = await database;
     return await connection

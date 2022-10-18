@@ -16,7 +16,7 @@ class ReponseService {
   }
 
   getReponsesByRubriqueId2(rubriqueId) async {
-    return await _savedataUser.readDataByContraints(
+    return await _savedataUser.readDataByContraints2(
         'reponses', 'rubriqueId', rubriqueId);
   }
 

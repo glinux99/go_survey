@@ -258,7 +258,7 @@ class _MenuGaucheState extends State<MenuGauche> {
               }),
           ListTile(
             leading: Icon(Icons.bar_chart_rounded),
-            title: Text("Enquetes recentes"),
+            title: Text("Donnees recentes"),
             onTap: () {
               Navigator.push(
                   context,

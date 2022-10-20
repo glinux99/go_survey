@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:go_survey/admin/dashbord.dart';
 import 'package:go_survey/auth/login.dart';
+import 'dart:io';
 import 'package:go_survey/components/DrawerMenu/apropos.dart';
 import 'package:go_survey/components/DrawerMenu/configs/rubriques.dart';
 import 'package:go_survey/components/DrawerMenu/newEnquete/questionnaires_creates.dart';
@@ -21,6 +22,7 @@ import 'package:go_survey/models/users/user_service.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:universal_html/html.dart';
 
 import '../../save.dart';
 
@@ -79,6 +81,12 @@ class _MenuGaucheState extends State<MenuGauche> {
 
   @override
   Widget build(BuildContext context) {
+    String store = "";
+    if (Platform.isAndroid) {
+      store = "Playstore";
+    } else {
+      store = "Appstore";
+    }
     return Drawer(
       child: ListView(
         children: [
@@ -285,7 +293,7 @@ class _MenuGaucheState extends State<MenuGauche> {
           const Divider(thickness: 1),
           ListTile(
             leading: Icon(Icons.favorite),
-            title: Text("Laissez un avis sur PlayStore"),
+            title: Text("Laissez un avis sur $store"),
             onTap: () {
               // show the dialog
               showDialog(
@@ -340,7 +348,8 @@ class _MenuGaucheState extends State<MenuGauche> {
                   context: context,
                   applicationIcon: Image.asset(
                     'assets/img/ico.png',
-                    height: 30,
+                    height: 50,
+                    fit: BoxFit.cover,
                   ),
                   applicationName: 'Go Survey',
                   applicationVersion: '\nV0.0.1',
@@ -369,12 +378,10 @@ class _MenuGaucheState extends State<MenuGauche> {
             leading: const Icon(Icons.logout),
             title: const Text('Deconection'),
             onTap: () async {
-              // final prefs = await SharedPreferences.getInstance();
-              // prefs.setBool('login', false);
-              // Navigator.pushReplacement(context,
-              //     MaterialPageRoute(builder: (context) => LoginSignup()));
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Testy()));
+              final prefs = await SharedPreferences.getInstance();
+              prefs.setBool('login', false);
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => LoginSignup()));
             },
           ),
         ],
@@ -436,6 +443,9 @@ class AlertGoSurvey extends StatelessWidget {
                   width: 300,
                   height: 50,
                   child: TextButton(
+                    style: TextButton.styleFrom(
+                        // primary: kWhite,
+                        backgroundColor: kGreen.withOpacity(0.5)),
                     child: Text(titre, style: TextStyle(color: Colors.white)),
                     onPressed: () {},
                   ),

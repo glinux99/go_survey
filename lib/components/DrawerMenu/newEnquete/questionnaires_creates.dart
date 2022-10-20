@@ -276,12 +276,15 @@ class _QuestionCreateState extends State<QuestionCreate> {
               ]),
           child: Column(
             children: [
-              Text(
-                "Creer une question",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Text(
+                  "Creer une question",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
@@ -293,6 +296,7 @@ class _QuestionCreateState extends State<QuestionCreate> {
                           padding: const EdgeInsets.only(right: 40),
                           child: TextFormField(
                             autofocus: false,
+                            textCapitalization: TextCapitalization.sentences,
                             decoration: InputDecoration(
                                 hintText: "Tapez ici votre questionnaire"),
                             controller: _controller,
@@ -379,78 +383,26 @@ class _QuestionCreateState extends State<QuestionCreate> {
               child: Text("Le questionnaire a ete supprime avec success"),
             )));
       },
-      child: Container(
-        margin: EdgeInsets.only(bottom: 10, top: 15),
-        padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
-        child: Container(
-          decoration: BoxDecoration(
-              color: Colors.green[200],
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  topRight: Radius.circular(30)),
-              boxShadow: [
-                new BoxShadow(
-                    color: Colors.green.withOpacity(.3),
-                    offset: new Offset(-10, 5),
-                    blurRadius: 20,
-                    spreadRadius: 4)
-              ]),
-          child: Column(
-            children: [
-              Text(
-                "Question \t$question",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Card(
+            elevation: 10,
+            child: ListTile(
+              leading: Text(
+                question.toString(),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 12),
-                  child: Column(
-                    children: [
-                      Text(
-                        listClass.list[index].toString().toUpperCase(),
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 116, 116, 116),
-                            fontWeight: FontWeight.w800,
-                            fontSize: 18),
-                      )
-                    ],
-                  ),
-                ),
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(listClass.list[index].toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  SizedBox(
+                    height: 10,
+                  )
+                ],
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, top: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Column(
-                              children: [
-                                Text("Type de reponse"),
-                                Text(reponseTypeList[index])
-                              ],
-                            )
-                          ],
-                        ),
-                        // ...typeofresponse.map(SimpleCheckbox).toList(),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              )
-            ],
-          ),
-        ),
+              subtitle: Text("Type de reponse : " + reponseTypeList[index]),
+            )),
       ),
     );
   }

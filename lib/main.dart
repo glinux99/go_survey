@@ -6,7 +6,10 @@ import 'package:go_survey/auth/login.dart';
 import 'package:go_survey/components/screen/introduction_screen.dart';
 import 'package:go_survey/save.dart';
 import 'package:lottie/lottie.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
 
 bool show = true, logPref = false;
 
@@ -74,8 +77,63 @@ class ThemeService {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Future<bool> _requestPermission(Permission permission) async {
+    if (await permission.isGranted) {
+      return true;
+    } else {
+      var result = await permission.request();
+      if (result == PermissionStatus.granted) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  createDir() async {
+    Directory? directory;
+    String monDossier = "";
+    try {
+      if (Platform.isAndroid) {
+        if (await _requestPermission(Permission.storage)) {
+          directory = await getExternalStorageDirectory();
+          // print(directory!.path);
+
+          List<String> dossiers = directory!.path.split('/');
+          for (var i = 0; i < dossiers.length; i++) {
+            String dossier = dossiers[i];
+            if (dossier != "Android") {
+              monDossier += "/" + dossier;
+            } else {
+              break;
+            }
+          }
+          monDossier = monDossier + "/GoSurvey";
+          print(monDossier);
+          directory = Directory(monDossier);
+        }
+      } else {
+        if (await _requestPermission(Permission.photos)) {
+          directory = await getTemporaryDirectory();
+        }
+      }
+    } catch (e) {}
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    createDir();
+    super.initState();
+  }
 
   // This widget is the root of your application.
   @override

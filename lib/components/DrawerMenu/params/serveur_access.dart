@@ -30,10 +30,12 @@ class _ServeurAccessHomeState extends State<ServeurAccessHome> {
           serveurwidget(
             titre: "Nom du Serveur",
             hintText: "GoSurvey Server",
+            champ: "serveur",
           ),
           serveurwidget(
             titre: "Url",
             hintText: "https://",
+            champ: "",
           ),
           serveurwidget(
             titre: "Nom d'Utilisateur",
@@ -52,10 +54,15 @@ class _ServeurAccessHomeState extends State<ServeurAccessHome> {
 
 class serveurwidget extends StatelessWidget {
   const serveurwidget(
-      {Key? key, required this.titre, required this.hintText, this.obscure})
+      {Key? key,
+      required this.titre,
+      required this.hintText,
+      this.obscure,
+      this.champ})
       : super(key: key);
   final String titre, hintText;
   final bool? obscure;
+  final String? champ;
   @override
   Widget build(BuildContext context) {
     return Padding(

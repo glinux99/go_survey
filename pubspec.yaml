@@ -31,6 +31,7 @@ dependencies:
   animated_theme_switcher: ^2.0.7
   checkbox_grouped: ^1.8.1
   cupertino_icons: ^1.0.5
+  dio: ^4.0.6
   excel:
     git:
       url: http://github.com/justkawal/excel.git
@@ -45,6 +46,7 @@ dependencies:
   font_awesome: ^5.10.1
   font_awesome_flutter: ^10.2.1
   group_radio_button: ^1.2.0
+  image_gallery_saver: ^1.7.1
   image_pickers: ^2.0.0+2
   in_app_review: ^2.0.4
   introduction_screen: ^3.0.2
@@ -53,6 +55,7 @@ dependencies:
   open_file: ^3.2.1
   path: ^1.8.2
   path_provider: ^2.0.11
+  permission_handler: ^10.1.0
   provider: ^6.0.3
   rating_dialog: ^2.0.4
   share_whatsapp: ^1.0.2

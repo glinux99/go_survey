@@ -44,6 +44,8 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string> Go Survey Application a besoin des photos</string>
 	<true/>
 </dict>
 </plist>

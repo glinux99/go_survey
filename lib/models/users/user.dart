@@ -6,7 +6,7 @@ class User {
   String? password;
   userMap() {
     var mapping = Map<String, dynamic>();
-    mapping['id'] = id ?? null;
+    mapping['id'] = id;
     mapping['name'] = name!;
     mapping['email'] = email!;
     mapping['phone'] = phone!;

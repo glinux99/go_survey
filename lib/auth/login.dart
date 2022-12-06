@@ -4,7 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_survey/admin/dashbord.dart';
 import 'package:go_survey/components/DrawerMenu/configs/taille_config.dart';
 import 'package:go_survey/components/colors/colors.dart';
-import 'package:go_survey/main.dart';
 import 'package:go_survey/models/users/user.dart';
 import 'package:go_survey/models/users/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,6 +39,8 @@ class _LoginSignupState extends State<LoginSignup> {
 
   @override
   Widget build(BuildContext context) {
+    final double size = MediaQuery.of(context).size.height;
+    final isclavier = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
       body: Stack(
         children: [
@@ -48,7 +49,8 @@ class _LoginSignupState extends State<LoginSignup> {
             right: 0,
             left: 0,
             child: Container(
-              height: 300,
+              height: size / 3,
+              // hg 300
               decoration: const BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage("assets/img/2.png"), fit: BoxFit.fill)),
@@ -90,7 +92,16 @@ class _LoginSignupState extends State<LoginSignup> {
             child: AnimatedPositioned(
               duration: const Duration(milliseconds: 400),
               curve: Curves.bounceInOut,
-              top: connecter ? inscriptErreur : 230,
+              // bottom: 0,
+              top: connecter
+                  ? isclavier
+                      ? size - MediaQuery.of(context).size.height
+                      : size - (MediaQuery.of(context).size.height - 100) / 1.14
+                  : isclavier
+                      ? 100
+                      : size - (MediaQuery.of(context).size.height - 100) / 1.2,
+              // top 230
+
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 0),
                 curve: Curves.bounceInOut,
@@ -266,6 +277,7 @@ class _LoginSignupState extends State<LoginSignup> {
                                           )));
                               logPref.setBool('login', true);
                             } else {
+                              // Si l'authentification refuse ce code pourra s'executer
                               Fluttertoast.showToast(
                                 msg: "Echec d'authentification",
                                 toastLength: Toast.LENGTH_SHORT,
@@ -274,21 +286,11 @@ class _LoginSignupState extends State<LoginSignup> {
                                 textColor: Colors.white,
                                 fontSize: 16.0,
                               );
-                              print('login is failled');
-                              print(user.email);
-                              print(user.password);
-                              print(userAuth);
+                              // print('login is failled');
                             }
                           }
                         }
                       },
-                      child: !connecter
-                          ? const Text(
-                              "Se connecter",
-                              style: TextStyle(color: kWhite),
-                            )
-                          : const Text("S'incrire",
-                              style: TextStyle(color: kWhite)),
                       style: TextButton.styleFrom(
                           side: const BorderSide(width: 1, color: kGrey),
                           minimumSize: const Size(145, 40),
@@ -296,6 +298,13 @@ class _LoginSignupState extends State<LoginSignup> {
                               borderRadius: BorderRadius.circular(10)),
                           // primary: kWhite,
                           backgroundColor: kGreen),
+                      child: !connecter
+                          ? const Text(
+                              "Se connecter",
+                              style: TextStyle(color: kWhite),
+                            )
+                          : const Text("S'incrire",
+                              style: TextStyle(color: kWhite)),
                     ),
                   ],
                 ),
@@ -322,7 +331,7 @@ class _LoginSignupState extends State<LoginSignup> {
                     ),
                   )
                 ],
-              ))
+              )),
         ],
       ),
     );

@@ -25,4 +25,17 @@ class QuestionnaireService {
   getQuestionById(id) async {
     return await _savedataSurvey.readDataById('questionnaires', id);
   }
+
+  getQuestionUpdate(id, data) async {
+    return await _savedataSurvey.updateDataQuery(
+        'questionnaires', 'question', data, id);
+  }
+
+  getAll() async {
+    return await _savedataSurvey.readData('questionnaires');
+  }
+
+  deleteQuestion(id) async {
+    return await _savedataSurvey.deleteDataById('questionnaires', id);
+  }
 }

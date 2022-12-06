@@ -4,35 +4,42 @@ import 'package:go_survey/models/questionnaires/questionnaire.dart';
 import 'package:go_survey/models/reponses/reponse_service.dart';
 import 'package:go_survey/models/reponses/reponses.dart';
 import 'package:go_survey/models/rubriques/rubrique.dart';
-import 'package:group_radio_button/group_radio_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/questionnaires/questionnaire_service.dart';
 
 class QuestionReponseViewView extends StatefulWidget {
-  final RubriqueModel questionnaires;
-  final int? questIndex;
-  QuestionReponseViewView(
+  const QuestionReponseViewView(
       {super.key, required this.questionnaires, this.questIndex});
+
+  final int? questIndex;
+  final RubriqueModel questionnaires;
+
   @override
   State<QuestionReponseViewView> createState() =>
       _QuestionReponseViewViewState();
 }
 
 class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
-  late List<QuestionnaireModel> questionsList;
-  var _result;
   late int cle;
-  final _questionnaireService = QuestionnaireService();
-  late final List<ReponsesModel> reponsesList;
+  late List<QuestionnaireModel> questionsList;
   late final Map<int, String> reponseQuestion;
   var reponseService = ReponseService();
+  late final List<ReponsesModel> reponsesList;
+
   late TextEditingController _controller;
-  late GlobalKey<FormState> _globalKey;
+  final _questionnaireService = QuestionnaireService();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _controller.dispose();
+  }
+
   @override
   void initState() {
     getRubriques();
-    _globalKey = GlobalKey();
     reponseQuestion = {};
     cle = 0;
     reponsesList = [];
@@ -58,19 +65,12 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
   }
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    _controller.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Debut de l'enquete"),
+        title: const Text("Debut de l'enquete"),
         centerTitle: true,
       ),
       body: Column(
@@ -79,7 +79,7 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
             height: 100,
             decoration: BoxDecoration(
                 borderRadius:
-                    BorderRadius.only(bottomLeft: Radius.circular(50)),
+                    const BorderRadius.only(bottomLeft: Radius.circular(50)),
                 color: Theme.of(context).colorScheme.secondary),
             child: Stack(
               children: [
@@ -101,7 +101,7 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
                           widget.questionnaires.description ?? '',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 18),
@@ -111,7 +111,7 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Expanded(
@@ -119,8 +119,8 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
                   itemCount: questionsList.length,
                   itemBuilder: (context, index) => Card(
                         elevation: 10,
-                        margin:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 10),
                         child: ListTile(
                           leading: Text(
                             (index + 1).toString(),
@@ -146,7 +146,6 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
                                   onChanged: (newValue) {
                                     reponseQuestion.addEntries(
                                         [MapEntry(index, newValue.toString())]);
-                                    print(reponseQuestion);
                                   },
                                 ),
                               if (questionsList[index].typeReponse.toString() ==
@@ -155,9 +154,10 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
                                   children: [
                                     // Some code
                                     Padding(
-                                        padding: EdgeInsets.only(bottom: 10),
+                                        padding:
+                                            const EdgeInsets.only(bottom: 10),
                                         child: RadioButtonField(
-                                            ['1. Oui', '2. Non'],
+                                            const ['1. Oui', '2. Non'],
                                             reponseQuestion,
                                             index)),
                                     // Text(reponseQuestion
@@ -171,7 +171,7 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
           Padding(
             padding: const EdgeInsets.all(7.0),
             child: TextButton(
-                style: ButtonStyle(),
+                style: const ButtonStyle(),
                 onPressed: () async {
                   var recPref = await SharedPreferences.getInstance();
                   var userId = recPref.getInt('authId');
@@ -191,6 +191,7 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
                       });
                     });
                     print(questionsList.length);
+                    // ignore: use_build_context_synchronously
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -204,7 +205,7 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
                     print('Error');
                   }
                 },
-                child: Text(
+                child: const Text(
                   "Enregistrer",
                   style: TextStyle(fontSize: 20),
                 )),
@@ -216,12 +217,13 @@ class _QuestionReponseViewViewState extends State<QuestionReponseViewView> {
 }
 
 class RadioButtonField extends StatelessWidget {
-  final List<String> radioList;
-  final Map<int, String> reponseQuestion;
-  final int index;
 // Don't ask me others hahahah ... Go Survey System hahah
   RadioButtonField(this.radioList, this.reponseQuestion, this.index,
       {super.key});
+
+  final int index;
+  final List<String> radioList;
+  final Map<int, String> reponseQuestion;
 
   @override
   Widget build(BuildContext context) {

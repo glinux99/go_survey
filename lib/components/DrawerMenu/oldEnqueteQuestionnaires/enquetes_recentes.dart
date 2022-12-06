@@ -33,7 +33,7 @@ class _EnqueteRecenteState extends State<EnqueteRecente> {
     IconData randomIcon = points[r.nextInt(points.length)];
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         children: [
           Divider(
@@ -64,9 +64,6 @@ class _EnqueteRecenteState extends State<EnqueteRecente> {
               trailing: Icon(Icons.more_vert_outlined),
             ),
           ),
-          SizedBox(
-            height: 2,
-          )
         ],
       ),
     );

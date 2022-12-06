@@ -145,7 +145,7 @@ class _MonProfileState extends State<MonProfile> {
   Widget CoverImageProfile(imageHeight) => Container(
         child: CircleAvatar(
           backgroundColor: Colors.green,
-          foregroundImage: AssetImage("assets/img/1.jpg"),
+          foregroundImage: AssetImage("assets/img/default.png"),
           child: Text(
             'user',
           ),

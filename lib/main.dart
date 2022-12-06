@@ -18,8 +18,6 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   logPref = prefs.getBool('login') ?? false;
   show = prefs.getBool("go_survey") ?? true;
-  final themeService = await ThemeService.instance;
-  var initTheme = themeService.initial;
   runApp(const MyApp());
 }
 
@@ -98,6 +96,7 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+// Demander l autorisation au system android ou ios de vouloir creer un dossier et y enregistrer des donnees si possible
   createDir() async {
     Directory? directory;
     String monDossier = "";
@@ -111,13 +110,12 @@ class _MyAppState extends State<MyApp> {
           for (var i = 0; i < dossiers.length; i++) {
             String dossier = dossiers[i];
             if (dossier != "Android") {
-              monDossier += "/" + dossier;
+              monDossier += "/$dossier";
             } else {
               break;
             }
           }
-          monDossier = monDossier + "/GoSurvey";
-          print(monDossier);
+          monDossier = "$monDossier/GoSurvey";
           directory = Directory(monDossier);
         }
       } else {
@@ -174,11 +172,11 @@ class _AnimatedScreenState extends State<AnimatedScreen> {
       splashIconSize: 255,
       duration: 3000,
       splashTransition: SplashTransition.fadeTransition,
-      animationDuration: Duration(seconds: 2),
+      animationDuration: const Duration(seconds: 2),
       nextScreen: show
           ? AcceuilScreen()
           : logPref
-              ? Dashboard(
+              ? const Dashboard(
                   RouteLink: "mainDashboard",
                 )
               : const LoginSignup(),

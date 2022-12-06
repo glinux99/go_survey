@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/reponse_view.dart';
-import 'package:go_survey/components/DrawerMenu/test.dart';
-import 'package:go_survey/components/ReponsesView.dart';
-import 'package:go_survey/components/colors/colors.dart';
 import 'package:go_survey/models/questionnaires/questionnaire.dart';
 import 'package:go_survey/models/reponses/reponse_service.dart';
 import 'package:go_survey/models/reponses/reponses.dart';
 import 'package:go_survey/models/rubriques/rubrique.dart';
-import 'package:group_radio_button/group_radio_button.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/questionnaires/questionnaire_service.dart';
 
 class QuestionReponseReadView extends StatefulWidget {
   final RubriqueModel questionnaires;
   final int? questIndex;
-  QuestionReponseReadView(
+  const QuestionReponseReadView(
       {super.key, required this.questionnaires, required this.questIndex});
   @override
   State<QuestionReponseReadView> createState() =>
@@ -25,16 +19,13 @@ class QuestionReponseReadView extends StatefulWidget {
 class _QuestionReponseReadViewState extends State<QuestionReponseReadView> {
   late List<QuestionnaireModel> questionsList;
   late List<ReponsesModel> reponsesList;
-  var _result;
   final _questionnaireService = QuestionnaireService();
   late final Map<int, String> reponseQuestion;
   var reponseService = ReponseService();
   late final List<String> reponsesView;
   late TextEditingController _controller;
-  late GlobalKey<FormState> _globalKey;
   @override
   void initState() {
-    _globalKey = GlobalKey();
     reponseQuestion = {};
     _controller = TextEditingController();
     questionsList = <QuestionnaireModel>[];
@@ -77,14 +68,14 @@ class _QuestionReponseReadViewState extends State<QuestionReponseReadView> {
     final double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Debut de l'enquete"),
+        title: const Text("Debut de l'enquete"),
         centerTitle: true,
       ),
       body: Column(
         children: [
           Container(
             height: 100,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 borderRadius:
                     BorderRadius.only(bottomLeft: Radius.circular(50)),
                 color: Colors.green),
@@ -108,7 +99,7 @@ class _QuestionReponseReadViewState extends State<QuestionReponseReadView> {
                           widget.questionnaires.description ?? '',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                       )),
@@ -116,7 +107,7 @@ class _QuestionReponseReadViewState extends State<QuestionReponseReadView> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Expanded(
@@ -132,7 +123,7 @@ class _QuestionReponseReadViewState extends State<QuestionReponseReadView> {
                       // }),
                       child: Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Container(
@@ -145,7 +136,7 @@ class _QuestionReponseReadViewState extends State<QuestionReponseReadView> {
                                           color: Colors.green[300],
                                           borderRadius:
                                               BorderRadius.circular(5.0),
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                                 color: Colors.green,
                                                 offset: Offset(-10, 10),
@@ -153,7 +144,7 @@ class _QuestionReponseReadViewState extends State<QuestionReponseReadView> {
                                                 spreadRadius: 4)
                                           ]),
                                       child: ConstrainedBox(
-                                          constraints: BoxConstraints(
+                                          constraints: const BoxConstraints(
                                             minHeight: 40,
                                           ),
                                           child: Padding(
@@ -196,7 +187,7 @@ class RadioButtonField extends StatelessWidget {
   final Map<int, String> reponseQuestion;
   final int index;
 // Don't ask me others hahahah ... Go Survey System hahah
-  RadioButtonField(this.radioList, this.reponseQuestion, this.index,
+  const RadioButtonField(this.radioList, this.reponseQuestion, this.index,
       {super.key});
 
   @override
@@ -239,70 +230,3 @@ class RadioButtonField extends StatelessWidget {
     );
   }
 }
-// class TestPage extends StatefulWidget {
-//   const TestPage({Key? key}) : super(key: key);
-
-//   @override
-//   _TestPageState createState() => _TestPageState();
-// }
-
-// class _TestPageState extends State<TestPage> {
-//   // The group value
-//   var _result;
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         centerTitle: true,
-//         title: const Text(
-//           'Kindacode.com',
-//         ),
-//       ),
-//       body: Padding(
-//           padding: const EdgeInsets.all(25),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               const Text('1 + 2 + 4 = ?'),
-//               RadioListTile(
-//                   title: const Text('4'),
-//                   value: 4,
-//                   groupValue: _result,
-//                   onChanged: (value) {
-//                     setState(() {
-//                       _result = value;
-//                     });
-//                   }),
-//               RadioListTile(
-//                   title: const Text('5.4'),
-//                   value: 5.4,
-//                   groupValue: _result,
-//                   onChanged: (value) {
-//                     setState(() {
-//                       _result = value;
-//                     });
-//                   }),
-//               RadioListTile(
-//                   title: const Text('6'),
-//                   value: 6,
-//                   groupValue: _result,
-//                   onChanged: (value) {
-//                     setState(() {
-//                       _result = value;
-//                     });
-//                   }),
-//               RadioListTile(
-//                   title: const Text('7'),
-//                   value: 7,
-//                   groupValue: _result,
-//                   onChanged: (value) {
-//                     setState(() {
-//                       _result = value;
-//                     });
-//                   }),
-//               const SizedBox(height: 25),
-//               Text(_result == 7 ? 'Correct!' : 'Please chose the right answer!')
-//             ],
-//           )),
-//     );
-//   }
-// }

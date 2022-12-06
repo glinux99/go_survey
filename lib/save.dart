@@ -27,14 +27,14 @@ ThemeData halloweenTheme = lightTheme.copyWith(
 );
 
 ThemeData darkBlueTheme = ThemeData.dark().copyWith(
-  inputDecorationTheme: InputDecorationTheme(
+  inputDecorationTheme: const InputDecorationTheme(
     border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black12)),
     labelStyle:
         TextStyle(color: Color.fromARGB(255, 74, 255, 68), fontSize: 24.0),
   ),
-  primaryColor: Color.fromARGB(255, 0, 0, 0),
+  primaryColor: const Color.fromARGB(255, 0, 0, 0),
   hintColor: Colors.black,
-  scaffoldBackgroundColor: Color.fromARGB(255, 34, 34, 34),
+  scaffoldBackgroundColor: const Color.fromARGB(255, 34, 34, 34),
   textTheme: const TextTheme(
     bodyText1: TextStyle(
       color: Color.fromARGB(255, 66, 128, 60),

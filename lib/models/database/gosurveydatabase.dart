@@ -1,4 +1,3 @@
-import 'package:go_survey/models/questionnaire.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -17,11 +16,10 @@ class GoSruveyDataBase {
   }
 
   Future<void> _createDatabase(Database db, int version) async {
-    final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    final textType = 'TEXT NOT NULL';
-    final stringType = 'STRING';
-    final boolTYpe = "BOOLEAN NOT NULL";
-    final integerType = 'INTEGER';
+    const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    const textType = 'TEXT NOT NULL';
+    const stringType = 'STRING';
+    const integerType = 'INTEGER';
     // on updqte
     // ON UPDATE SET NULL, ON DELETE SET NULL or set default, restrict, no action, cascade
     // Create table users for users of applications in  the mobile phone

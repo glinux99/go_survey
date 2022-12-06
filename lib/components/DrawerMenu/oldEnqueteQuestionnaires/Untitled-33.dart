@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:checkbox_grouped/checkbox_grouped.dart';
-import 'package:go_survey/components/DrawerMenu/newEnquete/questView.dart';
 import 'package:go_survey/models/dynamique_quest.dart';
 import 'package:go_survey/models/modalites/modalite.dart';
 import 'package:go_survey/models/modalites/modalite_service.dart';
@@ -213,22 +212,22 @@ class _QuestionCreateState extends State<QuestionCreate> {
                       // print(result);
 
                       // add params for questionnaireRe
-                    });
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => QuestionReponseViewView()));
 
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        backgroundColor: Colors.green[200],
-                        elevation: 2,
-                        padding: EdgeInsetsGeometry.lerp(
-                            EdgeInsets.all(12), EdgeInsets.all(12), 1),
-                        content: Container(
-                          height: 50,
-                          child: Text(
-                              "Le questionnaire a ete configure avec succes avec success"),
-                        )));
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => QuestionnaireSaveView()));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          backgroundColor: Colors.green[200],
+                          elevation: 2,
+                          padding: EdgeInsetsGeometry.lerp(
+                              EdgeInsets.all(12), EdgeInsets.all(12), 1),
+                          content: Container(
+                            height: 50,
+                            child: Text(
+                                "Le questionnaire a ete configure avec succes avec success"),
+                          )));
+                    });
                   },
                   icon: Icon(
                     Icons.check_circle_rounded,
@@ -384,26 +383,66 @@ class _QuestionCreateState extends State<QuestionCreate> {
               child: Text("Le questionnaire a ete supprime avec success"),
             )));
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Container(
+        margin: EdgeInsets.only(bottom: 0, top: 3),
+        padding: EdgeInsets.only(left: 20, right: 20, bottom: 1),
         child: Card(
-            elevation: 10,
-            child: ListTile(
-              leading: Text(
-                question.toString(),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          color: Theme.of(context).primaryColor.withOpacity(0.5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Center(
+                  child: Text(
+                    "Question \t$question",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                  ),
+                ),
               ),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(listClass.list[index].toString(),
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  SizedBox(
-                    height: 10,
-                  )
-                ],
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 20,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Column(
+                    children: [
+                      Text(
+                        listClass.list[index].toString(),
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 18),
+                      )
+                    ],
+                  ),
+                ),
               ),
-              subtitle: Text("Type de reponse : " + reponseTypeList[index]),
-            )),
+              Padding(
+                padding: EdgeInsets.only(left: 20, top: 20),
+                child: Row(
+                  children: [
+                    Text(
+                      "Type de reponse : ",
+                      style: TextStyle(fontSize: 17),
+                    ),
+                    Text(reponseTypeList[index])
+                    // ...typeofresponse.map(SimpleCheckbox).toList(),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

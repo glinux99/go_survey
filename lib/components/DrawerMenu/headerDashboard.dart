@@ -2,14 +2,13 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_survey/admin/dashbord.dart';
 import 'package:go_survey/auth/login.dart';
 import 'dart:io';
 import 'package:go_survey/components/DrawerMenu/apropos.dart';
-import 'package:go_survey/components/DrawerMenu/configs/rubriques.dart';
 import 'package:go_survey/components/DrawerMenu/newEnquete/questionnaires_creates.dart';
 import 'package:go_survey/components/DrawerMenu/oldEnqueteQuestionnaires/oldEnquete.dart';
-import 'package:go_survey/components/DrawerMenu/test.dart';
 import 'package:go_survey/components/DrawerMenu/user/userprofile.dart';
 import 'package:go_survey/components/bodyDashboard.dart';
 import 'package:go_survey/components/DrawerMenu/newEnquete/newsurvey.dart';
@@ -35,25 +34,26 @@ class MenuGauche extends StatefulWidget {
 }
 
 bool iconBinary = false;
-IconData _themeLightIcon = Icons.wb_sunny;
-IconData _themeDarkIcon = Icons.nights_stay;
-ThemeData _themeDark = ThemeData(
-  brightness: Brightness.dark,
-);
-ThemeData _themeLight =
-    ThemeData(primarySwatch: Colors.green, brightness: Brightness.light);
 
 class _MenuGaucheState extends State<MenuGauche> {
   bool profilevieuw = false;
-  var _alertController = TextEditingController();
-  int _currIndex = 1;
-  int _currIndex2 = 1;
-  var _userService = UserService();
-  var _recensementService = RecensementService();
+  // ignore: prefer_typing_uninitialized_variables
   var user;
   late String userName = 'Daniel';
   late String userPhone = '+243 970912428';
   late List<User> userUnique = [];
+
+  int _currIndex = 1;
+  int _currIndex2 = 1;
+  final _userService = UserService();
+
+  @override
+  void initState() {
+    getAuthUser();
+    // TODO: implement initState
+    super.initState();
+  }
+
   getAuthUser() async {
     final prefs = await SharedPreferences.getInstance();
     var result = await _userService.getUserById(prefs.getInt('authId'));
@@ -72,11 +72,22 @@ class _MenuGaucheState extends State<MenuGauche> {
     });
   }
 
-  @override
-  void initState() {
-    getAuthUser();
-    // TODO: implement initState
-    super.initState();
+  // actual store listing review & rating
+  void _rateAndReviewApp() async {
+    // refer to: https://pub.dev/packages/in_app_review
+    final inAppReview = InAppReview.instance;
+
+    if (await inAppReview.isAvailable()) {
+      print('request actual review from store');
+      inAppReview.requestReview();
+    } else {
+      print('open actual store listing');
+      // TODO: use your own store ids
+      inAppReview.openStoreListing(
+        appStoreId: '<your app store id>',
+        microsoftStoreId: '<your microsoft store id>',
+      );
+    }
   }
 
   @override
@@ -101,13 +112,13 @@ class _MenuGaucheState extends State<MenuGauche> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CircleAvatar(
+                      const CircleAvatar(
                         backgroundColor: Colors.green,
-                        foregroundImage: AssetImage("assets/img/1.jpg"),
+                        foregroundImage: AssetImage("assets/img/default.png"),
+                        radius: 34,
                         child: Text(
                           'user',
                         ),
-                        radius: 34,
                       ),
                       ThemeSwitcher(
                         builder: (context) {
@@ -131,7 +142,8 @@ class _MenuGaucheState extends State<MenuGauche> {
                                 duration: const Duration(milliseconds: 600),
                                 transitionBuilder: (child, anim) =>
                                     RotationTransition(
-                                      turns: child.key == ValueKey('icon11')
+                                      turns: child.key ==
+                                              const ValueKey('icon11')
                                           ? Tween<double>(begin: 1, end: 0.5)
                                               .animate(anim)
                                           : Tween<double>(begin: 0.5, end: 1)
@@ -140,13 +152,13 @@ class _MenuGaucheState extends State<MenuGauche> {
                                           opacity: anim, child: child),
                                     ),
                                 child: _currIndex2 == 0
-                                    ? Icon(Icons.light_mode_rounded,
+                                    ? const Icon(Icons.light_mode_rounded,
                                         color: Colors.white,
-                                        key: const ValueKey('icon11'))
-                                    : Icon(
+                                        key: ValueKey('icon11'))
+                                    : const Icon(
                                         Icons.dark_mode_rounded,
                                         color: Color.fromARGB(255, 0, 0, 0),
-                                        key: const ValueKey('icon22'),
+                                        key: ValueKey('icon22'),
                                       )),
                             // const Icon(Icons.brightness_3, size: 25),
                           );
@@ -170,12 +182,12 @@ class _MenuGaucheState extends State<MenuGauche> {
                           children: [
                             Text(
                               userName,
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
-                            SizedBox(height: 5),
+                            const SizedBox(height: 5),
                             Text(
                               userPhone,
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                           ],
                         ),
@@ -187,7 +199,8 @@ class _MenuGaucheState extends State<MenuGauche> {
                                 duration: const Duration(milliseconds: 200),
                                 transitionBuilder: (child, anim) =>
                                     RotationTransition(
-                                      turns: child.key == ValueKey('icon1')
+                                      turns: child.key ==
+                                              const ValueKey('icon1')
                                           ? Tween<double>(begin: 1, end: 0.75)
                                               .animate(anim)
                                           : Tween<double>(begin: 0.75, end: 1)
@@ -196,13 +209,13 @@ class _MenuGaucheState extends State<MenuGauche> {
                                           opacity: anim, child: child),
                                     ),
                                 child: _currIndex == 0
-                                    ? Icon(Icons.keyboard_arrow_right,
+                                    ? const Icon(Icons.keyboard_arrow_right,
                                         color: Colors.white,
-                                        key: const ValueKey('icon1'))
-                                    : Icon(
+                                        key: ValueKey('icon1'))
+                                    : const Icon(
                                         Icons.keyboard_arrow_down_rounded,
                                         color: Colors.white,
-                                        key: const ValueKey('icon2'),
+                                        key: ValueKey('icon2'),
                                       )),
                             onPressed: () {
                               setState(() {
@@ -220,27 +233,23 @@ class _MenuGaucheState extends State<MenuGauche> {
             ),
           ),
           if (profilevieuw)
-            AnimatedPositioned(
-              curve: Curves.bounceInOut,
-              duration: Duration(seconds: 200),
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.person_outline_rounded),
-                    title: const Text('Mon profile'),
-                    onTap: () async {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MonProfile(
-                                    userUnique: userUnique[0],
-                                  )));
-                      // print(user[0].name);
-                    },
-                  ),
-                  Divider(),
-                ],
-              ),
+            Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.person_outline_rounded),
+                  title: const Text('Mon profile'),
+                  onTap: () async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MonProfile(
+                                  userUnique: userUnique[0],
+                                )));
+                    // print(user[0].name);
+                  },
+                ),
+                const Divider(thickness: 1),
+              ],
             ),
           ListTile(
             leading: const Icon(Icons.home),
@@ -255,19 +264,19 @@ class _MenuGaucheState extends State<MenuGauche> {
             },
           ),
           ListTile(
-              leading: Icon(Icons.bar_chart),
-              title: Text("Nouvel enquete"),
+              leading: const Icon(FontAwesomeIcons.chartBar),
+              title: const Text("Nouvel enquete"),
               onTap: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Dashboard(
+                        builder: (context) => const Dashboard(
                               RouteLink: 'newEnquete',
                             )));
               }),
           ListTile(
-            leading: Icon(Icons.bar_chart_rounded),
-            title: Text("Donnees recentes"),
+            leading: const Icon(Icons.bar_chart_rounded),
+            title: const Text("Donnees recentes"),
             onTap: () {
               Navigator.push(
                   context,
@@ -292,7 +301,7 @@ class _MenuGaucheState extends State<MenuGauche> {
           ),
           const Divider(thickness: 1),
           ListTile(
-            leading: Icon(Icons.favorite),
+            leading: const Icon(Icons.favorite),
             title: Text("Laissez un avis sur $store"),
             onTap: () {
               // show the dialog
@@ -303,19 +312,19 @@ class _MenuGaucheState extends State<MenuGauche> {
                   builder: (context) => RatingDialog(
                         initialRating: 1.0,
                         // your app's name?
-                        title: Text(
+                        title: const Text(
                           'Evaluation',
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
 
-                        message: Text(
+                        message: const Text(
                           'Appuyez sur une étoile pour définir votre évaluation. Ajoutez plus de description ici si vous le souhaitez.',
                           textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 15),
+                          style: TextStyle(fontSize: 15),
                         ),
                         // logo de l application
                         image: Image.asset(
@@ -341,8 +350,8 @@ class _MenuGaucheState extends State<MenuGauche> {
             },
           ),
           ListTile(
-              leading: Icon(Icons.library_add_check),
-              title: Text("Licences et librairies"),
+              leading: const Icon(Icons.library_add_check),
+              title: const Text("Licences et librairies"),
               onTap: () {
                 showAboutDialog(
                   context: context,
@@ -354,7 +363,7 @@ class _MenuGaucheState extends State<MenuGauche> {
                   applicationName: 'Go Survey',
                   applicationVersion: '\nV0.0.1',
                   applicationLegalese: '2022 Power by Joviale',
-                  children: <Widget>[Text('')],
+                  children: <Widget>[const Text('')],
                 );
               }),
           ListTile(
@@ -370,8 +379,10 @@ class _MenuGaucheState extends State<MenuGauche> {
             leading: const Icon(Icons.info),
             title: const Text('A propos'),
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AproposGoSurvey()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AproposGoSurvey()));
             },
           ),
           ListTile(
@@ -381,30 +392,12 @@ class _MenuGaucheState extends State<MenuGauche> {
               final prefs = await SharedPreferences.getInstance();
               prefs.setBool('login', false);
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => LoginSignup()));
+                  MaterialPageRoute(builder: (context) => const LoginSignup()));
             },
           ),
         ],
       ),
     );
-  }
-
-  // actual store listing review & rating
-  void _rateAndReviewApp() async {
-    // refer to: https://pub.dev/packages/in_app_review
-    final _inAppReview = InAppReview.instance;
-
-    if (await _inAppReview.isAvailable()) {
-      print('request actual review from store');
-      _inAppReview.requestReview();
-    } else {
-      print('open actual store listing');
-      // TODO: use your own store ids
-      _inAppReview.openStoreListing(
-        appStoreId: '<your app store id>',
-        microsoftStoreId: '<your microsoft store id>',
-      );
-    }
   }
 }
 
@@ -420,10 +413,12 @@ class AlertGoSurvey extends StatelessWidget {
   })  : _alertController = alertController,
         _recensementService = recensementService,
         super(key: key);
-  final String titre;
+
   final String hinText;
   final String prefId;
   final String routeLink;
+  final String titre;
+
   final TextEditingController _alertController;
   final RubriqueService _recensementService;
 
@@ -446,11 +441,12 @@ class AlertGoSurvey extends StatelessWidget {
                     style: TextButton.styleFrom(
                         // primary: kWhite,
                         backgroundColor: kGreen.withOpacity(0.5)),
-                    child: Text(titre, style: TextStyle(color: Colors.white)),
+                    child: Text(titre,
+                        style: const TextStyle(color: Colors.white)),
                     onPressed: () {},
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 25,
                 ),
                 Container(
@@ -467,7 +463,7 @@ class AlertGoSurvey extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 TextButton(
@@ -485,17 +481,17 @@ class AlertGoSurvey extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => QuestionnaireCreate(
+                              builder: (context) => const QuestionnaireCreate(
                                     title: "Creation du questionnaire",
                                   )));
                       print(recPref.getInt(prefId));
                     } else
                       print('text input not null');
                   },
-                  child: Text("Valider"),
+                  child: const Text("Valider"),
                   style: TextButton.styleFrom(
-                      side: BorderSide(width: 1, color: Colors.grey),
-                      minimumSize: Size(145, 40),
+                      side: const BorderSide(width: 1, color: Colors.grey),
+                      minimumSize: const Size(145, 40),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       primary: Colors.white,
@@ -510,18 +506,26 @@ class AlertGoSurvey extends StatelessWidget {
 
 class DashboardBody extends StatefulWidget {
   const DashboardBody({super.key, required this.RouteLink});
+
   final String RouteLink;
+
   @override
   State<DashboardBody> createState() => _DashboardBodyState();
 }
 
 class _DashboardBodyState extends State<DashboardBody> {
-  late SharedPreferences prefs;
   late String appTitle = widget.RouteLink == "newEnquete"
       ? "Nouvelle enquete"
       : widget.RouteLink == "oldEnquete"
           ? "Donnees recentes"
           : "Go Survey";
+
+  late SharedPreferences prefs;
+  late List<RubriqueModel> rubriquesList;
+
+  List<RubriqueModel> _foundRUb = [];
+  final _rubriqueService = RubriqueService();
+
   @override
   void initState() {
     rubriquesList = <RubriqueModel>[];
@@ -530,9 +534,6 @@ class _DashboardBodyState extends State<DashboardBody> {
     super.initState();
   }
 
-  List<RubriqueModel> _foundRUb = [];
-  late List<RubriqueModel> rubriquesList;
-  var _rubriqueService = RubriqueService();
   getRubriques() async {
     var rubriques = await _rubriqueService.getAllRubriques();
     setState(() {
@@ -547,37 +548,22 @@ class _DashboardBodyState extends State<DashboardBody> {
     print(rubriquesList);
   }
 
-  void _runFiltre(String value) {
-    List<RubriqueModel> result = [];
-    if (value.isEmpty) {
-      result = rubriquesList;
-    } else {
-      result = rubriquesList
-          .where((element) =>
-              element.description!.toLowerCase().contains(value.toLowerCase()))
-          .toList();
-    }
-    setState(() {
-      _foundRUb = result;
-    });
-  }
-
   Widget header() {
     Size size = MediaQuery.of(context).size;
     return Container(
-      margin: EdgeInsets.only(bottom: 15 * 2.5),
+      margin: const EdgeInsets.only(bottom: 15 * 2.5),
       height: size.height * .14,
       child: Stack(
         children: [
           Container(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               left: 15,
               bottom: 36 + 15,
             ),
             height: size.height * .2,
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.secondary,
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(36),
                   bottomRight: Radius.circular(36),
                 )),
@@ -587,14 +573,14 @@ class _DashboardBodyState extends State<DashboardBody> {
                 children: [
                   Text(
                     appTitle,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold),
                   ),
                   Container(
                     width: 100,
-                    child: CircleAvatar(
+                    child: const CircleAvatar(
                       backgroundColor: Colors.white,
                       foregroundImage: AssetImage(
                         "assets/img/ico.png",
@@ -618,15 +604,15 @@ class _DashboardBodyState extends State<DashboardBody> {
             right: 0,
             child: Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              margin: EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              margin: const EdgeInsets.symmetric(horizontal: 15),
               height: 48,
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                        offset: Offset(0, 10),
+                        offset: const Offset(0, 10),
                         blurRadius: 50,
                         color: Colors.green.withOpacity(.23))
                   ]),
@@ -641,7 +627,7 @@ class _DashboardBodyState extends State<DashboardBody> {
                         color: Theme.of(context).colorScheme.secondary),
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
-                    suffixIcon: Icon(Icons.search)),
+                    suffixIcon: const Icon(Icons.search)),
               ),
             ),
           ),
@@ -650,26 +636,41 @@ class _DashboardBodyState extends State<DashboardBody> {
     );
   }
 
+  void _runFiltre(String value) {
+    List<RubriqueModel> result = [];
+    if (value.isEmpty) {
+      result = rubriquesList;
+    } else {
+      result = rubriquesList
+          .where((element) =>
+              element.description!.toLowerCase().contains(value.toLowerCase()))
+          .toList();
+    }
+    setState(() {
+      _foundRUb = result;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // activation du scroking dans des petites appareils
     return SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            header(),
-            widget.RouteLink == "mainDashboard"
-                ? MainDashboard(
-                    foundRUb: _foundRUb,
-                  )
-                : widget.RouteLink == "oldEnquete"
-                    ? OldEnquete(
-                        rubriquesList: _foundRUb,
-                      )
-                    : NewEnquete(
-                        rubriquesList: _foundRUb,
-                      ),
-          ],
-        ));
+      child: Column(
+        children: [
+          header(),
+          widget.RouteLink == "mainDashboard"
+              ? MainDashboard(
+                  foundRUb: _foundRUb,
+                )
+              : widget.RouteLink == "oldEnquete"
+                  ? OldEnquete(
+                      rubriquesList: _foundRUb,
+                    )
+                  : NewEnquete(
+                      rubriquesList: _foundRUb,
+                    ),
+        ],
+      ),
+    );
   }
 }

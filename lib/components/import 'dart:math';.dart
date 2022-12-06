@@ -11,9 +11,7 @@ import 'package:go_survey/models/rubriques/rubrique_service.dart';
 
 class MainDashboard extends StatefulWidget {
   const MainDashboard({super.key, required this.foundRUb});
-
   final List<RubriqueModel> foundRUb;
-
   @override
   State<MainDashboard> createState() => _MainDashboardState();
 }
@@ -47,7 +45,7 @@ class _MainDashboardState extends State<MainDashboard> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     if (rubriquesList.isEmpty == true) {
-      return const Center(
+      return Center(
         child: Text("Aucune donnee"),
       );
     } else {
@@ -57,12 +55,12 @@ class _MainDashboardState extends State<MainDashboard> {
             height: size.height * .232,
             child: ListView.builder(
                 reverse: true,
-                physics: const ClampingScrollPhysics(),
+                physics: ClampingScrollPhysics(),
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.foundRUb.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Random rnd = Random();
+                  Random rnd = new Random();
                   int min = 1, max = 10;
                   int file = min + rnd.nextInt(max - min);
                   return GestureDetector(
@@ -82,43 +80,60 @@ class _MainDashboardState extends State<MainDashboard> {
                   );
                 }),
           ),
-          TitreButtonPlus(
-            titreBtn: "Voir plus",
-            titre: "Questionnaires recentes",
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const Dashboard(
-                            RouteLink: "oldEnquete",
-                          )));
-            },
-          ),
-          Column(
-            children: const [
-              EnqueteRecente(
-                titre: "Enquete sur les enfants de la rue",
-                sousTitre: "Une enquete sur les enfant de la rue est une ",
-                RubriqueImg: null,
-              ),
-              EnqueteRecente(
-                titre: "Enquete sur les entreprises de la RDC",
-                sousTitre:
-                    "Le programme mondial des enquêtes MICS a été élaboré par l'UNICEF dans les ",
-                RubriqueImg: null,
-              ),
-              EnqueteRecente(
-                titre: "Enquete sur les consequences des mouvements rebelles",
-                sousTitre: "les consequences de mouvements rebelles est une",
-                RubriqueImg: null,
-              ),
-              EnqueteRecente(
-                titre: "Projet PDS RDC",
-                sousTitre: "Le recensement general des entreprises",
-                RubriqueImg: null,
-              ),
-            ],
-          ),
+          SizedBox(
+              height: MediaQuery.of(context).size.height / 2.1,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    TitreButtonPlus(
+                      titreBtn: "Voir plus",
+                      titre: "Questionnaires recentes",
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Dashboard(
+                                      RouteLink: "oldEnquete",
+                                    )));
+                      },
+                    ),
+                    Column(
+                      children: [
+                        EnqueteRecente(
+                          titre: "Enquete sur les enfants de la rue",
+                          sousTitre:
+                              "Une enquete sur les enfant de la rue est une ",
+                          RubriqueImg: null,
+                        ),
+                        EnqueteRecente(
+                          titre: "Enquete sur les entreprises de la RDC",
+                          sousTitre:
+                              "Le programme mondial des enquêtes MICS a été élaboré par l'UNICEF dans les ",
+                          RubriqueImg: null,
+                        ),
+                        EnqueteRecente(
+                          titre:
+                              "Enquete sur les consequences des mouvement rebelles",
+                          sousTitre:
+                              "les consequences de mouvements rebelles est une",
+                          RubriqueImg: null,
+                        ),
+                        EnqueteRecente(
+                          titre: "Projet PDS RDC",
+                          sousTitre: "Le recensement generale des entreprises",
+                          RubriqueImg: null,
+                        ),
+                        EnqueteRecente(
+                          titre: "Projet SPRINT",
+                          sousTitre:
+                              "Le recensement general des micro-entreprises",
+                          RubriqueImg: null,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ))
         ],
       );
     }

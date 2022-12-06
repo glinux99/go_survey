@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_survey/auth/login.dart';
-import 'package:go_survey/components/DrawerMenu/user/userprofile.dart';
 import 'package:go_survey/components/colors/colors.dart';
 import 'package:go_survey/models/users/user.dart';
 import 'package:go_survey/models/users/user_service.dart';
@@ -238,7 +237,7 @@ class _ProfileEditState extends State<ProfileEdit> {
   Widget CoverImageProfile(imageHeight) => Container(
         child: CircleAvatar(
           backgroundColor: Colors.green,
-          foregroundImage: AssetImage("assets/img/1.jpg"),
+          foregroundImage: AssetImage("assets/img/default.png"),
           child: Text(
             'user',
           ),

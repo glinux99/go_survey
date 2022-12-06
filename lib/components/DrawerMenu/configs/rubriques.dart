@@ -2,8 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_survey/components/DrawerMenu/headerDashboard.dart';
-import 'package:go_survey/components/DrawerMenu/newEnquete/questionnaires_creates.dart';
-import 'package:go_survey/models/modalites/modalite_service.dart';
 import 'package:go_survey/models/rubriques/rubrique_service.dart';
 import 'package:lottie/lottie.dart';
 
@@ -23,7 +21,7 @@ class EnqueteWidget extends StatefulWidget {
 class _EnqueteWidgetState extends State<EnqueteWidget> {
   @override
   Widget build(BuildContext context) {
-    Random rnd = new Random();
+    Random rnd = Random();
     int min = 1, max = 10;
     int file = min + rnd.nextInt(max - min);
     String img = "assets/img/$file.json";
@@ -32,19 +30,19 @@ class _EnqueteWidgetState extends State<EnqueteWidget> {
       builder: (context, constraint) => Container(
         // On prend la 40 % de la taille total de l ecran
         width: size.width * .4,
-        margin: EdgeInsets.only(
+        margin: const EdgeInsets.only(
           left: 10,
           top: 10 / 4,
-          bottom: 10 * 2.5,
+          bottom: 10 * 2,
         ),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(10),
                 bottomRight: Radius.circular(10)),
             boxShadow: [
               BoxShadow(
-                offset: Offset(0, 10),
+                offset: const Offset(0, 10),
                 blurRadius: 50,
                 color: Colors.green.withOpacity(.23),
               )
@@ -57,7 +55,7 @@ class _EnqueteWidgetState extends State<EnqueteWidget> {
             //   fit: BoxFit.fill,
             // ),
             Container(
-              height: 99,
+              height: MediaQuery.of(context).size.height / 9,
               child: Lottie.asset(img),
             ),
             Divider(
@@ -68,41 +66,39 @@ class _EnqueteWidgetState extends State<EnqueteWidget> {
               onTap: () {},
               child: Container(
                 padding: EdgeInsets.all(15 / 2),
-                child: Flexible(
-                  child: Wrap(
-                    children: [
-                      Text(
-                        '${widget.titre}\n',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                child: Wrap(
+                  children: [
+                    Text(
+                      '${widget.titre}\n',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    // Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          maxLines: 1,
+                          "Questions",
+                          style: TextStyle(
                             color: Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            maxLines: 1,
-                            "Questions",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 12,
-                            ),
+                            fontSize: 12,
                           ),
-                          Text(
-                            widget.CountQ.toString(),
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 12,
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
+                        ),
+                        Text(
+                          widget.CountQ.toString(),
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 12,
+                          ),
+                        )
+                      ],
+                    )
+                  ],
                 ),
               ),
             )
@@ -118,9 +114,10 @@ class RubriqueCreateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _alertController = TextEditingController();
-    var _recensementService = RubriqueService();
+    var alertController = TextEditingController();
+    var recensementService = RubriqueService();
     Size size = MediaQuery.of(context).size;
+
     return Container(
       decoration: BoxDecoration(
           color: Colors.green[100],
@@ -138,31 +135,19 @@ class RubriqueCreateWidget extends StatelessWidget {
           showDialog(
               context: context,
               builder: (BuildContext context) {
-                // return AlertGoSUrvey(
-                //   titre: "Creer une ribrique",
-                //   hintText: "Entrer le nom de votre rubrique",
-                //   validation: () {
-                //     Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //             builder: (context) => QuestionnaireCreate(
-                //                   title: "Creation du questionnaire",
-                //                 )));
-                //   },
-                // );
                 return AlertGoSurvey(
                     titre: "Creer une enquete",
                     hinText: "Tapez le nom de votre enquete",
                     prefId: "rubriqueCurrentId",
                     routeLink: "newRubrique",
-                    alertController: _alertController,
-                    recensementService: _recensementService);
+                    alertController: alertController,
+                    recensementService: recensementService);
               });
         },
         child: Column(
           children: [
             Container(
-              height: 100,
+              height: MediaQuery.of(context).size.height / 8.2,
               child: Icon(
                 Icons.add,
                 size: 50,
@@ -177,42 +162,40 @@ class RubriqueCreateWidget extends StatelessWidget {
                   color: Colors.green.withOpacity(.23),
                 )
               ]),
-              child: Flexible(
-                child: Wrap(
-                  children: [
-                    Text(
-                      "Creer une rubrique",
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+              child: Wrap(
+                children: [
+                  Text(
+                    "Creer une rubrique",
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  // Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        maxLines: 2,
+                        "\nQuestions",
+                        style: TextStyle(
                           color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          maxLines: 2,
-                          "\nQuestions",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 12,
-                          ),
+                          fontSize: 12,
                         ),
-                        Text(
-                          "\n0",
-                          maxLines: 2,
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 12,
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
+                      ),
+                      Text(
+                        "\n0",
+                        maxLines: 2,
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontSize: 12,
+                        ),
+                      )
+                    ],
+                  )
+                ],
               ),
             ),
           ],

@@ -175,87 +175,91 @@ class _QuestionCreateState extends State<QuestionCreate> {
     ]);
   }
 
-  Expanded createSection(context, typeofresponse) {
-    return Expanded(
-        child: MediaQuery.removePadding(
-      context: context,
-      child: Wrap(children: [
-        Container(
-          margin: EdgeInsets.only(bottom: 10, top: 15),
-          padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.green[200],
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    topRight: Radius.circular(30)),
-                boxShadow: [
-                  new BoxShadow(
-                      color: Colors.green.withOpacity(.3),
-                      offset: new Offset(-10, 5),
-                      blurRadius: 20,
-                      spreadRadius: 4)
-                ]),
-            child: Column(
-              children: [
-                Text(
-                  "Creer une question",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      Form(
-                          key: _globalKey,
-                          child: TextFormField(
-                            autofocus: false,
-                            decoration: InputDecoration(
-                                hintText: "Tapez ici votre questionnaire"),
-                            controller: _controller,
-                            onSaved: (val) {
-                              taskItems.AjouterElement(val);
-                            },
-                          )),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, top: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Type de reponse",
-                      ),
-                      Column(
+  Column createSection(context, typeofresponse) {
+    return Column(
+      children: [
+        Expanded(
+            child: MediaQuery.removePadding(
+          context: context,
+          child: Wrap(children: [
+            Container(
+              margin: EdgeInsets.only(bottom: 10, top: 15),
+              padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.green[200],
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        topRight: Radius.circular(30)),
+                    boxShadow: [
+                      new BoxShadow(
+                          color: Colors.green.withOpacity(.3),
+                          offset: new Offset(-10, 5),
+                          blurRadius: 20,
+                          spreadRadius: 4)
+                    ]),
+                child: Column(
+                  children: [
+                    Text(
+                      "Creer une question",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
                         children: [
-                          RadioGroup<String>.builder(
-                            groupValue: _verticalGroupValue,
-                            onChanged: (value) => setState(() {
-                              _verticalGroupValue = value.toString();
-                            }),
-                            items: typeReponse,
-                            itemBuilder: (item) => RadioButtonBuilder(
-                              item,
-                            ),
-                          ),
-                          // ...typeofresponse.map(SimpleCheckbox).toList(),
+                          Form(
+                              key: _globalKey,
+                              child: TextFormField(
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                    hintText: "Tapez ici votre questionnaire"),
+                                controller: _controller,
+                                onSaved: (val) {
+                                  taskItems.AjouterElement(val);
+                                },
+                              )),
                         ],
-                      )
-                    ],
-                  ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, top: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Type de reponse",
+                          ),
+                          Column(
+                            children: [
+                              RadioGroup<String>.builder(
+                                groupValue: _verticalGroupValue,
+                                onChanged: (value) => setState(() {
+                                  _verticalGroupValue = value.toString();
+                                }),
+                                items: typeReponse,
+                                itemBuilder: (item) => RadioButtonBuilder(
+                                  item,
+                                ),
+                              ),
+                              // ...typeofresponse.map(SimpleCheckbox).toList(),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    Text(_verticalGroupValue),
+                  ],
                 ),
-                Text(_verticalGroupValue),
-              ],
+              ),
             ),
-          ),
-        ),
-      ]),
-    ));
+          ]),
+        )),
+      ],
+    );
   }
 
   Widget buildList(

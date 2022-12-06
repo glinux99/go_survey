@@ -24,4 +24,8 @@ class RubriqueService {
   getRubriqueById(id) async {
     return await _savedataSurvey.readDataById('rubriques', id);
   }
+
+  delete(id) async {
+    return await _savedataSurvey.deleteDataById('rubriques', id);
+  }
 }

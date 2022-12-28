@@ -367,7 +367,7 @@ class _LoginSignupState extends State<LoginSignup> {
   Container enregistrementSection() {
     return Container(
       margin: const EdgeInsets.only(top: 20),
-      child: Column(
+      child: ListView(
         children: [
           TextFieldContainer(
             child: TextFormField(
